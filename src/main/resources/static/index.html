@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GearStore - Thiết bị Gaming & PC Cao Cấp</title>
+    <!-- Google Font Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gear-red: #e3001b;
+            --gear-red-dark: #b80014;
+            --bg-body: #f4f4f4;
+            --white: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --text-light: #9ca3af;
+            --border-light: #e5e7eb;
+            --success: #10b981;
+            --bg-footer: #18181c;
+            --bg-footer-bottom: #0f0f12;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- RED HEADER --- */
+        header {
+            background-color: var(--gear-red);
+            padding: 0.75rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text span {
+            background: var(--white);
+            color: var(--gear-red);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.2rem;
+            font-weight: 900;
+        }
+
+        .category-btn {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .category-btn:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .search-container {
+            flex-grow: 1;
+            max-width: 550px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border: none;
+            border-radius: 6px 0 0 6px;
+            outline: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .search-button {
+            background-color: #333333;
+            color: var(--white);
+            border: none;
+            padding: 0 1.25rem;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .search-button:hover {
+            background-color: #000000;
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .header-link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            color: var(--white);
+            transition: opacity 0.2s;
+        }
+
+        .header-link-item:hover {
+            opacity: 0.85;
+        }
+
+        /* --- SUB HEADER LINKS BAR --- */
+        .sub-header-bar {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0.5rem 0;
+        }
+
+        .sub-header-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4b5563;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .sub-header-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sub-header-item:hover {
+            background-color: #f3f4f6;
+            color: var(--gear-red);
+        }
+
+        /* --- MAIN WRAPPER LAYOUT --- */
+        .main-layout {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- SIDEBAR MENU --- */
+        .sidebar-menu {
+            background-color: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            align-self: start;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-menu {
+                display: none;
+            }
+        }
+
+        .sidebar-list {
+            list-style: none;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-item:last-child a {
+            border-bottom: none;
+        }
+
+        .sidebar-item a:hover {
+            background-color: #fef2f2;
+            color: var(--gear-red);
+        }
+
+        .sidebar-item-icon {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .sidebar-chevron {
+            color: #d1d5db;
+            font-size: 0.75rem;
+        }
+
+        /* --- CONTENT SECTION & CARD --- */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--gear-red);
+        }
+
+        /* White Product Card */
+        .product-detail-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 42% 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-card {
+                grid-template-columns: 1fr;
+                padding: 1.25rem;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Product Gallery */
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .main-image-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #f3f4f6;
+            border-radius: 6px;
+            padding: 1rem;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .product-main-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .main-image-wrapper:hover .product-main-img {
+            transform: scale(1.03);
+        }
+
+        .aws-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background-color: #10b981;
+            color: var(--white);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Product Info Description */
+        .product-info-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 0.75rem;
+        }
+
+        .meta-id {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .price-section {
+            background-color: #fafafa;
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px dashed var(--border-light);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+
+        .price-current {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gear-red);
+        }
+
+        .price-original {
+            font-size: 1.1rem;
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .price-discount {
+            background-color: #fee2e2;
+            color: var(--gear-red);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* Promos Box */
+        .promo-box {
+            border: 1px solid #fca5a5;
+            background-color: #fef2f2;
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gear-red);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .promo-list {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #4b5563;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .promo-list li::before {
+            content: "🎁 ";
+        }
+
+        /* Button Purchase */
+        .purchase-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-buy-now {
+            background-color: var(--gear-red);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            padding: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-buy-now:hover {
+            background-color: var(--gear-red-dark);
+        }
+
+        .btn-buy-now span:first-child {
+            font-size: 1.05rem;
+            text-transform: uppercase;
+        }
+
+        .btn-buy-now span:last-child {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .btn-installment {
+            background-color: #2563eb;
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            padding: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-installment:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-installment span:first-child {
+            font-size: 1.05rem;
+            text-transform: uppercase;
+        }
+
+        .btn-installment span:last-child {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* Specs section */
+        .specs-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .specs-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .specs-table td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .specs-table td:first-child {
+            font-weight: 600;
+            color: #4b5563;
+            width: 30%;
+            background-color: #f3f4f6;
+        }
+
+        .specs-table td:last-child {
+            color: #111827;
+        }
+
+        /* --- INTRO SECTION --- */
+        .intro-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .intro-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+            border-left: 5px solid var(--gear-red);
+            padding-left: 0.75rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .intro-desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .intro-features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .intro-features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-box {
+            background-color: #f9fafb;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-color: #fca5a5;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Error state */
+        .error-card {
+            display: none;
+            background-color: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            padding: 3rem;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gear-red);
+        }
+
+        .btn-retry {
+            background-color: var(--gear-red);
+            color: var(--white);
+            border: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-retry:hover {
+            background-color: var(--gear-red-dark);
+        }
+
+        /* --- FOOTER DESIGN --- */
+        footer {
+            background-color: var(--bg-footer);
+            color: #d1d5db;
+            margin-top: 3rem;
+            border-top: 4px solid var(--gear-red);
+        }
+
+        .footer-top {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-column h4 {
+            color: var(--white);
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid var(--gear-red);
+            padding-left: 0.5rem;
+        }
+
+        .footer-column p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            color: #9ca3af;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.65rem;
+        }
+
+        .footer-column ul li a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s, padding-left 0.2s;
+            display: inline-block;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--white);
+            padding-left: 4px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .contact-item {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .contact-item strong {
+            color: var(--white);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .social-btn {
+            background-color: #2a2a30;
+            color: var(--white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .social-btn:hover {
+            background-color: var(--gear-red);
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .payment-badge {
+            background-color: var(--white);
+            color: #333333;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .footer-bottom {
+            background-color: var(--bg-footer-bottom);
+            padding: 1.5rem 0;
+            border-top: 1px solid #232329;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .footer-bottom-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-bottom-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .bct-badge {
+            display: inline-block;
+            border: 1px solid #3b3b45;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- --- RED HEADER --- -->
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo-section">
+                <div class="logo-text">GEAR<span>STORE</span></div>
+            </a>
+            
+            <button class="category-btn">
+                <span>☰</span> Danh mục
+            </button>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="productIdInput" class="search-input" placeholder="Bạn cần tìm laptop gì? (Ví dụ: LAP001, LAP002)">
+                    <button class="search-button" onclick="searchProduct()">Tìm kiếm</button>
+                </div>
+            </div>
+            
+            <div class="header-links">
+                <a href="#" class="header-link-item">
+                    <span>📞</span> Hotline 1900.5301
+                </a>
+                <a href="#" class="header-link-item">
+                    <span>📍</span> Showroom
+                </a>
+                <a href="#" class="header-link-item">
+                    <span>🛒</span> Giỏ hàng
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- --- SUB HEADER LINKS BAR --- -->
+    <div class="sub-header-bar">
+        <div class="sub-header-container">
+            <div class="sub-header-item">🔥 BUILD PC tặng màn hình 240Hz</div>
+            <div class="sub-header-item">🔄 Thu cũ đổi mới</div>
+            <div class="sub-header-item">📰 Tin tức công nghệ</div>
+            <div class="sub-header-item">🛠️ Dịch vụ kỹ thuật tại nhà</div>
+            <div class="sub-header-item">🛡️ Tra cứu bảo hành</div>
+        </div>
+    </div>
+
+    <!-- --- MAIN WRAPPER LAYOUT --- -->
+    <div class="main-layout">
+        
+        <!-- Left Sidebar Categories -->
+        <aside class="sidebar-menu">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">💻</span>Laptop<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🎮</span>Laptop Gaming<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🖥️</span>PC GVN<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">⚙️</span>Main, CPU, VGA<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🔋</span>Case, Nguồn, Tản<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">💾</span>Ổ cứng, RAM, Thẻ nhớ<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🔊</span>Loa, Micro, Tai nghe<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">📺</span>Màn hình máy tính<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">⌨️</span>Bàn phím cơ<span class="sidebar-chevron">▶</span></a></li>
+                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🖱️</span>Chuột + Lót chuột<span class="sidebar-chevron">▶</span></a></li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Section -->
+        <main class="content-container">
+            
+            <div class="breadcrumb">
+                <a href="/">Trang chủ</a> &gt; <a href="#">Laptop</a> &gt; <span id="breadcrumbCurrent">Đang tải...</span>
+            </div>
+
+            <!-- Main Product Detail Card -->
+            <div class="product-detail-card" id="productContainer">
+                
+                <!-- Left: Product Image -->
+                <div class="product-gallery">
+                    <div class="main-image-wrapper">
+                        <span class="aws-badge">AWS S3</span>
+                        <!-- Loading placeholder -->
+                        <div class="skeleton" style="width: 100%; height: 100%; position: absolute; top:0; left:0; border-radius: 6px;" id="imgSkeleton"></div>
+                        <img id="productImage" class="product-main-img" style="display: none;" alt="Ảnh sản phẩm">
+                    </div>
+                </div>
+
+                <!-- Right: Product Information -->
+                <div class="product-info-wrapper">
+                    <div class="product-meta-row">
+                        <span>Mã SP: <span class="meta-id" id="productId">---</span></span>
+                        <span>Tình trạng: <span style="color: var(--success); font-weight: 700;">Còn hàng</span></span>
+                    </div>
+
+                    <h1 class="product-title" id="productName">Đang tải thông tin sản phẩm...</h1>
+
+                    <!-- Price Block -->
+                    <div class="price-section">
+                        <div class="price-row">
+                            <span class="price-current" id="productPrice">---</span>
+                            <span class="price-original" id="productPriceOriginal">---</span>
+                            <span class="price-discount" id="productDiscount">-2%</span>
+                        </div>
+                    </div>
+
+                    <!-- Promotions Box -->
+                    <div class="promo-box">
+                        <div class="promo-title">🎁 KHUYẾN MÃI ĐẶC BIỆT</div>
+                        <ul class="promo-list">
+                            <li>Giảm trực tiếp thêm 500.000đ khi thanh toán qua VNPay-QR.</li>
+                            <li>Tặng Balo GearVN cao cấp trị giá 350.000đ.</li>
+                            <li>Tặng chuột Gaming Asus TUF M3 trị giá 450.000đ.</li>
+                            <li>Miễn phí giao hàng toàn quốc và hỗ trợ lắp đặt tại nhà.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="purchase-actions">
+                        <button class="btn-buy-now" onclick="alert('Đã thêm sản phẩm vào giỏ hàng!')">
+                            <span>MUA NGAY</span>
+                            <span>Giao hàng tận nơi nhanh chóng</span>
+                        </button>
+                        <button class="btn-installment" onclick="alert('Liên hệ hotline để được hỗ trợ mua trả góp 0%!')">
+                            <span>TRẢ GÓP 0%</span>
+                            <span>Duyệt hồ sơ nhanh qua thẻ tín dụng</span>
+                        </button>
+                    </div>
+
+                    <!-- Specifications Table -->
+                    <div class="specs-section">
+                        <h3 class="specs-title">📋 Thông số kỹ thuật chi tiết</h3>
+                        <table class="specs-table">
+                            <tbody id="specsTableBody">
+                                <!-- Skeletons -->
+                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 80%;"></div></td></tr>
+                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 60%;"></div></td></tr>
+                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 70%;"></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Error State Card -->
+            <div class="error-card" id="errorContainer">
+                <div class="error-message">❌ KHÔNG TÌM THẤY SẢN PHẨM</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng kiểm tra lại mã ID sản phẩm hoặc kết nối mạng của bạn.</p>
+                <button class="btn-retry" onclick="loadProduct()">Thử lại</button>
+            </div>
+
+            <!-- --- INTRO SECTION --- -->
+            <section class="intro-card">
+                <h2 class="intro-title">GearStore - Hệ thống bán lẻ Laptop & PC Gaming uy tín</h2>
+                <p class="intro-desc">
+                    Chào mừng bạn đến với <strong>GearStore</strong>, điểm đến tin cậy hàng đầu dành cho cộng đồng game thủ và người yêu công nghệ tại Việt Nam. Chúng tôi chuyên cung cấp các dòng sản phẩm máy tính cao cấp, bao gồm <strong>laptop gaming</strong> thế hệ mới nhất, <strong>laptop văn phòng</strong> mỏng nhẹ hiệu năng cao, các hệ thống <strong>PC GVN độc quyền</strong> được lắp ráp tỉ mỉ, cùng các linh kiện phần cứng chính hãng chất lượng cao. Với sự tận tâm và phong cách làm việc chuyên nghiệp được kế thừa từ các mô hình hàng đầu như GearVN, GearStore cam kết mang đến dịch vụ tốt nhất và trải nghiệm mua sắm hoàn hảo nhất.
+                </p>
+                <div class="intro-features-grid">
+                    <div class="feature-box">
+                        <span class="feature-icon">⚡</span>
+                        <div class="feature-title">Giao Hàng Siêu Tốc</div>
+                        <div class="feature-desc">Nhận hàng trong vòng 2h tại khu vực nội thành</div>
+                    </div>
+                    <div class="feature-box">
+                        <span class="feature-icon">🛡️</span>
+                        <div class="feature-title">Bảo Hành Chính Hãng</div>
+                        <div class="feature-desc">Cam kết bảo hành 100% chính hãng tới 24 tháng</div>
+                    </div>
+                    <div class="feature-box">
+                        <span class="feature-icon">💳</span>
+                        <div class="feature-title">Trả Góp 0% Lãi Suất</div>
+                        <div class="feature-desc">Thủ tục nhanh chóng qua thẻ tín dụng</div>
+                    </div>
+                    <div class="feature-box">
+                        <span class="feature-icon">🔧</span>
+                        <div class="feature-title">Hỗ Trợ Kỹ Thuật</div>
+                        <div class="feature-desc">Lắp đặt và cài đặt phần mềm tận nơi miễn phí</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- --- FOOTER DESIGN --- -->
+    <footer>
+        <div class="footer-top">
+            <div class="footer-column">
+                <h4>Về GearStore</h4>
+                <p style="margin-top: 0.5rem;">Hệ thống cửa hàng Hi-end PC & Gaming Gear chuyên nghiệp hàng đầu.</p>
+                <div class="contact-info">
+                    <div class="contact-item">📍 <strong>Showroom:</strong> 78-80 Hoàng Hoa Thám, P.12, Q.Tân Bình, TP.HCM</div>
+                    <div class="contact-item">📞 <strong>Hotline:</strong> 1900 5301</div>
+                    <div class="contact-item">✉️ <strong>Email:</strong> cskh@gearstore.vn</div>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Chính sách bán hàng</h4>
+                <ul>
+                    <li><a href="#">Chính sách bảo hành tại hãng</a></li>
+                    <li><a href="#">Chính sách đổi trả sản phẩm 1-1</a></li>
+                    <li><a href="#">Chính sách giao hàng và lắp đặt</a></li>
+                    <li><a href="#">Chính sách bảo mật thông tin cá nhân</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Hỗ trợ khách hàng</h4>
+                <ul>
+                    <li><a href="#">Hướng dẫn mua hàng trực tuyến</a></li>
+                    <li><a href="#">Phương thức thanh toán qua VNPay</a></li>
+                    <li><a href="#">Hướng dẫn mua trả góp online</a></li>
+                    <li><a href="#">Gửi yêu cầu hỗ trợ kỹ thuật</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Kết nối với chúng tôi</h4>
+                <p>Theo dõi các kênh truyền thông của GearStore để nhận ưu đãi mới nhất.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-btn">F</a>
+                    <a href="#" class="social-btn">Y</a>
+                    <a href="#" class="social-btn">Z</a>
+                </div>
+                <div class="payment-methods">
+                    <span class="payment-badge">Visa</span>
+                    <span class="payment-badge">Master</span>
+                    <span class="payment-badge">VNPay</span>
+                    <span class="payment-badge">JCB</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-container">
+                <div>
+                    Copyright © 2026 GearStore. All Rights Reserved. Bản quyền thuộc về GearStore.
+                </div>
+                <div class="bct-badge">
+                    ✓ Đã đăng ký Bộ Công Thương
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function formatVND(value) {
+            if (!value) return 'Liên hệ';
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+
+        async function loadProduct(productId) {
+            const id = productId || getQueryParam('id') || 'LAP001';
+            document.getElementById('productIdInput').value = id;
+
+            // UI loading state
+            document.getElementById('productContainer').style.display = 'grid';
+            document.getElementById('errorContainer').style.display = 'none';
+            document.getElementById('productImage').style.display = 'none';
+            document.getElementById('imgSkeleton').style.display = 'block';
+
+            try {
+                const response = await fetch(`/products/${id}`);
+                if (!response.ok) throw new Error('Product not found');
+                const data = await response.json();
+
+                // Bind details
+                document.getElementById('productId').textContent = data.productId;
+                document.getElementById('productName').textContent = data.name;
+                document.getElementById('breadcrumbCurrent').textContent = data.name;
+                
+                // Formatted price tags
+                const currentPrice = data.price;
+                document.getElementById('productPrice').textContent = formatVND(currentPrice);
+                
+                // Estimate original price for aesthetics (e.g. +2% to cross out)
+                if (currentPrice) {
+                    const originalPrice = Math.round((currentPrice * 1.02) / 10000) * 10000;
+                    document.getElementById('productPriceOriginal').textContent = formatVND(originalPrice);
+                } else {
+                    document.getElementById('productPriceOriginal').textContent = '';
+                }
+
+                // Handle Image
+                const img = document.getElementById('productImage');
+                const skeleton = document.getElementById('imgSkeleton');
+                if (data.imageUrl) {
+                    img.src = data.imageUrl;
+                    img.onload = () => {
+                        skeleton.style.display = 'none';
+                        img.style.display = 'block';
+                    };
+                } else {
+                    img.src = 'https://placehold.co/500x500/f3f4f6/333333?text=No+Image';
+                    img.onload = () => {
+                        skeleton.style.display = 'none';
+                        img.style.display = 'block';
+                    };
+                }
+
+                // Render Specs Table
+                const tableBody = document.getElementById('specsTableBody');
+                tableBody.innerHTML = '';
+
+                if (data.attributes && Object.keys(data.attributes).length > 0) {
+                    Object.entries(data.attributes).forEach(([key, val]) => {
+                        const tr = document.createElement('tr');
+                        
+                        const tdLabel = document.createElement('td');
+                        tdLabel.textContent = key;
+                        
+                        const tdVal = document.createElement('td');
+                        tdVal.textContent = val;
+                        
+                        tr.appendChild(tdLabel);
+                        tr.appendChild(tdVal);
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="2" style="color: var(--text-muted); text-align: center;">Chưa có thông số cấu hình cụ thể</td></tr>';
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('productContainer').style.display = 'none';
+                document.getElementById('errorContainer').style.display = 'flex';
+            }
+        }
+
+        function searchProduct() {
+            const inputVal = document.getElementById('productIdInput').value.trim();
+            if (inputVal) {
+                const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${inputVal}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                loadProduct(inputVal);
+            }
+        }
+
+        // Trigger on load
+        window.addEventListener('DOMContentLoaded', () => loadProduct());
+    </script>
+</body>
+</html>
