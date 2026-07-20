@@ -4,32 +4,45 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import org.springframework.util.StringUtils;
 
 @Configuration
 public class DynamoDbConfig {
 
-    // Spring Boot sẽ tự bốc dữ liệu từ file application.properties điền vào đây
     @Value("${aws.dynamodb.region}")
     private String region;
 
-    @Value("${aws.dynamodb.accesskey}")
+    // Khi chạy local: đọc từ application.properties
+    // Khi chạy trên Lambda: để trống, SDK tự dùng IAM Role
+    @Value("${aws.dynamodb.accesskey:}")
     private String accessKey;
 
-    @Value("${aws.dynamodb.secretkey}")
+    @Value("${aws.dynamodb.secretkey:}")
     private String secretKey;
 
     @Bean
     public DynamoDbClient dynamoDbClient() {
-        return DynamoDbClient.builder()
-                .region(Region.of(region)) // Sử dụng biến region động
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(accessKey, secretKey) // Sử dụng cặp key bảo mật
-                ))
-                .build();
+        software.amazon.awssdk.services.dynamodb.DynamoDbClientBuilder builder = DynamoDbClient.builder()
+                .region(Region.of(region));
+
+        // Nếu có access key (chạy local) → dùng StaticCredentials
+        // Nếu không có (chạy trên Lambda với IAM Role) → dùng DefaultCredentials (tự động)
+        if (StringUtils.hasText(accessKey) && StringUtils.hasText(secretKey)) {
+            builder.credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(accessKey, secretKey)
+                )
+            );
+        } else {
+            builder.credentialsProvider(DefaultCredentialsProvider.create());
+        }
+
+        return builder.build();
     }
 
     @Bean

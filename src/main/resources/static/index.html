@@ -2026,6 +2026,7 @@
     </footer>
 
     <script>
+        const API_BASE_URL = 'https://626breq7j2.execute-api.ap-southeast-1.amazonaws.com';
         let allProducts = [];
 
         function formatVND(value) {
@@ -2159,7 +2160,7 @@
         async function googleLoginSuccess(userInfo) {
             try {
                 // Tạo/cập nhật tài khoản trên DynamoDB
-                await fetch('/auth/register', {
+                await fetch(API_BASE_URL + '/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -2216,7 +2217,7 @@
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch(API_BASE_URL + '/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -2247,7 +2248,7 @@
             const password = document.getElementById('regPassword').value;
 
             try {
-                const response = await fetch('/auth/register', {
+                const response = await fetch(API_BASE_URL + '/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, fullName, email, password })
@@ -2277,7 +2278,7 @@
                 
                 let adminLink = '';
                 if (user.role === 'ADMIN') {
-                    adminLink = `<a href="/admin.html" class="user-dropdown-item" style="color: var(--primary-red); font-weight: 700;">
+                    adminLink = `<a href="/admin_v2.html" class="user-dropdown-item" style="color: var(--primary-red); font-weight: 700;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Trang Quản trị
                     </a>
@@ -2506,7 +2507,7 @@
         // Fetch products on page load
         async function fetchProducts() {
             try {
-                const response = await fetch('/products');
+                const response = await fetch(API_BASE_URL + '/products');
                 if (!response.ok) throw new Error('Failed to load products');
                 allProducts = await response.json();
                 renderProducts(allProducts);
