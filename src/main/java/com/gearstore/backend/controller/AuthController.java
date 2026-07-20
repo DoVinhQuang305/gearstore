@@ -59,4 +59,24 @@ public class AuthController {
 
         return ResponseEntity.ok("Đăng ký tài khoản thành công!");
     }
+
+    // API Lấy tất cả người dùng (Cho trang Admin): GET http://localhost:8080/auth/users
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userRepository.getAllUsers());
+    }
+
+    // API Cập nhật người dùng (Từ trang Admin): PUT http://localhost:8080/auth/users/update
+    @PutMapping("/users/update")
+    public ResponseEntity<?> updateUserFromAdmin(@RequestBody UserEntity updatedUser) {
+        UserEntity existing = userRepository.getUser(updatedUser.getUsername());
+        if (existing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existing.setFullName(updatedUser.getFullName());
+        existing.setEmail(updatedUser.getEmail());
+        existing.setRole(updatedUser.getRole());
+        userRepository.saveUser(existing);
+        return ResponseEntity.ok("Cập nhật thông tin người dùng thành công!");
+    }
 }

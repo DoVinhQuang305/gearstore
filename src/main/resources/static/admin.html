@@ -1055,9 +1055,9 @@
                         <tr>
                             <th>Họ và Tên</th>
                             <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Địa chỉ nhận hàng</th>
-                            <th>Vai trò</th>
+                            <th>Tên tài khoản</th>
+                            <th>Quyền hạn</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody id="customersTableBody">
@@ -1151,6 +1151,41 @@
     </div>
 </div>
 
+<!-- CUSTOMER FORM MODAL (EDIT USER) -->
+<div class="admin-modal-overlay" id="customerFormModal">
+    <form id="customerForm" class="admin-modal-card" onsubmit="handleCustomerFormSubmit(event)" style="max-width:460px;">
+        <div class="modal-form-header">
+            <h2 style="font-size:1.15rem;font-weight:800;color:var(--text-dark);display:flex;align-items:center;gap:0.5rem;" id="customerModalTitle">Chỉnh sửa thông tin thành viên</h2>
+            <button type="button" class="modal-close-btn" onclick="closeCustomerModal()">×</button>
+        </div>
+        <div class="modal-form-body" style="padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Tên tài khoản (Username)</label>
+                <input type="text" id="custFormUsername" disabled class="form-input" style="background:#f1f5f9;color:#64748b;font-weight:600;cursor:not-allowed;">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Họ và Tên</label>
+                <input type="text" id="custFormFullName" required class="form-input">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Địa chỉ Email</label>
+                <input type="email" id="custFormEmail" required class="form-input">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Quyền hạn (Role)</label>
+                <select id="custFormRole" required class="form-input" style="padding:0.6rem 0.8rem; border-radius:8px;">
+                    <option value="USER">USER (Khách mua hàng)</option>
+                    <option value="ADMIN">ADMIN (Quản trị viên)</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-form-footer" style="padding:1.25rem 1.5rem; background:#f8fafc; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; gap:0.75rem;">
+            <button type="button" class="btn-secondary" onclick="closeCustomerModal()">Hủy</button>
+            <button type="submit" class="btn-primary">Lưu thay đổi</button>
+        </div>
+    </form>
+</div>
+
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -1237,8 +1272,7 @@
             now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         fetchProducts();
-        const activeCustomers = loadCustomersFromOrders();
-        renderCustomers(activeCustomers);
+        fetchUsers();
     }
 
     // ===== MOCK SALES DATA =====
@@ -1763,13 +1797,28 @@
     }
 
     // ===== CUSTOMERS MANAGEMENT =====
-    const mockCustomers = [
-        { name: 'Nguyễn Văn Hùng', email: 'hung.nguyen@gmail.com', phone: '0912345678', address: '12 Lạc Long Quân, Q.11, TP.HCM', role: 'Thành viên VIP' },
-        { name: 'Trần Thị Mai', email: 'mai.tran@yahoo.com', phone: '0987654321', address: '456 Lê Lợi, Q. Gò Vấp, TP.HCM', role: 'Thành viên mới' },
-        { name: 'Lê Hoàng Nam', email: 'nam.le@hotmail.com', phone: '0909090909', address: '78 Nguyễn Trãi, Q.5, TP.HCM', role: 'Thành viên VIP' },
-        { name: 'Phạm Minh Tuấn', email: 'tuan.pham@gmail.com', phone: '0888777666', address: '321 Độc Lập, Q. Tân Phú, TP.HCM', role: 'Thành viên mới' },
-        { name: 'Đỗ Thị Ngọc', email: 'ngoc.do@gmail.com', phone: '0933445566', address: '15 Trần Hưng Đạo, Q.1, TP.HCM', role: 'Thành viên VIP' }
-    ];
+    let allUsers = [];
+
+    async function fetchUsers() {
+        try {
+            const response = await fetch(API_BASE_URL + '/auth/users');
+            if (!response.ok) throw new Error('Không thể tải danh sách người dùng');
+            allUsers = await response.json();
+            renderCustomers(allUsers);
+        } catch (error) {
+            console.error(error);
+            showToast('Không thể đồng bộ người dùng từ DynamoDB. Đang dùng dữ liệu offline.', 'warning');
+            
+            // Fallback offline dùng mock list
+            allUsers = [
+                { fullName: 'Nguyễn Văn Hùng', email: 'hung.nguyen@gmail.com', username: 'hungnguyen', role: 'USER' },
+                { fullName: 'Trần Thị Mai', email: 'mai.tran@yahoo.com', username: 'maitran', role: 'USER' },
+                { fullName: 'Lê Hoàng Nam', email: 'nam.le@hotmail.com', username: 'namle', role: 'USER' },
+                { fullName: 'Đỗ Vinh Quang', email: 'vinhquang@gmail.com', username: 'admin', role: 'ADMIN' }
+            ];
+            renderCustomers(allUsers);
+        }
+    }
 
     function renderCustomers(list) {
         const tbody = document.getElementById('customersTableBody');
@@ -1777,19 +1826,72 @@
         tbody.innerHTML = '';
         list.forEach(c => {
             const tr = document.createElement('tr');
+            const roleBadgeStyle = c.role === 'ADMIN' 
+                ? 'background:rgba(220,38,38,0.08); color:var(--primary-red);' 
+                : 'background:rgba(37,99,235,0.08); color:var(--blue);';
+            const roleLabel = c.role === 'ADMIN' ? 'Quản trị viên' : 'Khách mua hàng';
+            
             tr.innerHTML = `
-                <td style="font-weight:700;">${c.name}</td>
-                <td>${c.email}</td>
-                <td>${c.phone}</td>
-                <td>${c.address}</td>
-                <td><span style="background:${c.role.includes('VIP') ? 'rgba(215,0,24,0.1)' : 'rgba(59,130,246,0.1)'};color:${c.role.includes('VIP') ? 'var(--primary-red)' : 'var(--blue)'};font-size:0.75rem;padding:3px 8px;border-radius:20px;font-weight:700;">${c.role}</span></td>
+                <td style="font-weight:700;">${c.fullName || 'Chưa cập nhật'}</td>
+                <td>${c.email || 'Chưa cập nhật'}</td>
+                <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.8rem;">${c.username}</code></td>
+                <td><span style="font-size:0.75rem; padding:4px 10px; border-radius:20px; font-weight:700; ${roleBadgeStyle}">${roleLabel}</span></td>
+                <td class="action-btns">
+                    <button class="btn-action edit-btn" onclick="openCustomerEditModal('${c.username}')" title="Sửa thông tin">
+                        <i data-lucide="edit-3" style="width:14px;height:14px;"></i>
+                    </button>
+                </td>
             `;
             tbody.appendChild(tr);
         });
         
-        // Cập nhật Badge số lượng trên Sidebar
+        // Cập nhật số lượng Badge trên Sidebar
         const badge = document.querySelector('.menu-badge');
         if (badge) badge.textContent = list.length;
+        lucide.createIcons();
+    }
+
+    // Modal sửa thông tin User
+    function openCustomerEditModal(username) {
+        const user = allUsers.find(u => u.username === username);
+        if (!user) return;
+        
+        document.getElementById('custFormUsername').value = user.username;
+        document.getElementById('custFormFullName').value = user.fullName || '';
+        document.getElementById('custFormEmail').value = user.email || '';
+        document.getElementById('custFormRole').value = user.role || 'USER';
+        
+        document.getElementById('customerFormModal').style.display = 'flex';
+        lucide.createIcons();
+    }
+
+    function closeCustomerModal() {
+        document.getElementById('customerFormModal').style.display = 'none';
+    }
+
+    async function handleCustomerFormSubmit(e) {
+        e.preventDefault();
+        const username = document.getElementById('custFormUsername').value;
+        const fullName = document.getElementById('custFormFullName').value.trim();
+        const email = document.getElementById('custFormEmail').value.trim();
+        const role = document.getElementById('custFormRole').value;
+
+        try {
+            const response = await fetch(API_BASE_URL + '/auth/users/update', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, fullName, email, role })
+            });
+
+            if (!response.ok) throw new Error(await response.text());
+            
+            showToast('Cập nhật thông tin thành viên thành công!', 'success');
+            closeCustomerModal();
+            fetchUsers(); // Tải lại danh sách mới từ DynamoDB
+        } catch (error) {
+            console.error(error);
+            showToast('Không thể cập nhật: ' + error.message, 'error');
+        }
     }
 
     // Preview image URL input
@@ -1829,12 +1931,11 @@
         if (custSearch) {
             custSearch.addEventListener('input', function() {
                 const term = this.value.trim().toLowerCase();
-                const activeCustomersList = loadCustomersFromOrders();
-                const filtered = activeCustomersList.filter(c => 
-                    c.name.toLowerCase().includes(term) || 
-                    c.email.toLowerCase().includes(term) ||
-                    c.phone.includes(term) ||
-                    c.address.toLowerCase().includes(term)
+                const filtered = allUsers.filter(u => 
+                    (u.fullName && u.fullName.toLowerCase().includes(term)) || 
+                    (u.email && u.email.toLowerCase().includes(term)) ||
+                    u.username.toLowerCase().includes(term) ||
+                    u.role.toLowerCase().includes(term)
                 );
                 renderCustomers(filtered);
             });

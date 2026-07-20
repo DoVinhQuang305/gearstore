@@ -68,4 +68,13 @@ public class UserRepository {
             return null;
         }
     }
+
+    // Lấy tất cả user (Scan DynamoDB)
+    public java.util.List<UserEntity> getAllUsers() {
+        try {
+            return userTable.scan().items().stream().collect(java.util.stream.Collectors.toList());
+        } catch (Exception e) {
+            return java.util.Collections.emptyList();
+        }
+    }
 }
