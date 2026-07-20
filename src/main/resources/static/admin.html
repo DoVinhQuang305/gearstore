@@ -1354,9 +1354,11 @@
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     }
 
+    const API_BASE_URL = 'https://626breq7j2.execute-api.ap-southeast-1.amazonaws.com';
+
     async function fetchProducts() {
         try {
-            const response = await fetch('/products');
+            const response = await fetch(API_BASE_URL + '/products');
             if (!response.ok) throw new Error('Không thể tải danh sách sản phẩm');
             allProducts = await response.json();
             renderTable(allProducts);
@@ -1447,7 +1449,7 @@
         if (sessionUploadedUrl && sessionUploadedUrl.includes('gearstore-data-images.s3')) {
             try {
                 const orphanKey = sessionUploadedUrl.substring(sessionUploadedUrl.lastIndexOf('/') + 1);
-                fetch(`/products/s3-delete?key=${encodeURIComponent(orphanKey)}`, { method: 'DELETE' })
+                fetch(API_BASE_URL + `/products/s3-delete?key=${encodeURIComponent(orphanKey)}`, { method: 'DELETE' })
                     .catch(e => console.warn('Không xóa được ảnh tạm S3:', e));
             } catch (e) { console.warn(e); }
         }
@@ -1496,7 +1498,7 @@
             if (k && v) attributes[k] = v;
         });
         const payload = { productId, recordType: 'PRODUCT_INFO', name, price, imageUrl, attributes };
-        const url = isEditMode ? `/products/${productId}` : '/products';
+        const url = isEditMode ? API_BASE_URL + `/products/${productId}` : API_BASE_URL + '/products';
         const method = isEditMode ? 'PUT' : 'POST';
         try {
             const response = await fetch(url, {
@@ -1516,7 +1518,7 @@
     async function deleteProduct(productId) {
         if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm ${productId}?`)) return;
         try {
-            const response = await fetch(`/products/${productId}?type=PRODUCT_INFO`, { method: 'DELETE' });
+            const response = await fetch(API_BASE_URL + `/products/${productId}?type=PRODUCT_INFO`, { method: 'DELETE' });
             if (!response.ok) throw new Error();
             showToast('Xóa sản phẩm thành công!', 'success');
             fetchProducts();
@@ -1539,12 +1541,12 @@
         try {
             if (sessionUploadedUrl && sessionUploadedUrl.includes('gearstore-data-images.s3')) {
                 const oldKey = sessionUploadedUrl.substring(sessionUploadedUrl.lastIndexOf('/') + 1);
-                await fetch(`/products/s3-delete?key=${encodeURIComponent(oldKey)}`, { method: 'DELETE' }).catch(() => {});
+                await fetch(API_BASE_URL + `/products/s3-delete?key=${encodeURIComponent(oldKey)}`, { method: 'DELETE' }).catch(() => {});
                 sessionUploadedUrl = null;
             }
             const formData = new FormData();
             formData.append('file', file);
-            const response = await fetch('/products/upload', { method: 'POST', body: formData });
+            const response = await fetch(API_BASE_URL + '/products/upload', { method: 'POST', body: formData });
             if (!response.ok) throw new Error(await response.text());
             const s3Url = await response.text();
             urlInput.value = s3Url;
@@ -1579,10 +1581,21 @@
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        const icon = type === 'success' ? '✓' : '✕';
-        toast.innerHTML = `<span>${icon}</span> ${message}`;
+        
+        let iconName = 'check-circle';
+        if (type === 'error') iconName = 'alert-triangle';
+        else if (type === 'warning') iconName = 'info';
+
+        toast.innerHTML = `<i data-lucide="${iconName}" style="width:16px;height:16px;"></i> <span>${message}</span>`;
         container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3500);
+        lucide.createIcons();
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(50px)';
+            toast.style.transition = 'all 0.4s ease';
+            setTimeout(() => toast.remove(), 400);
+        }, 3200);
     }
 </script>
 </body>
