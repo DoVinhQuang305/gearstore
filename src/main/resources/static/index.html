@@ -2469,11 +2469,11 @@
                 const user = await response.json();
                 localStorage.setItem('user', JSON.stringify(user)); // Lưu session
                 
-                alert(`Đăng nhập thành công! Xin chào, ${user.fullName}`);
+                showToast(`Đăng nhập thành công! Xin chào, ${user.fullName}`, 'success');
                 closeLoginModal();
                 checkUserSession(); // Cập nhật Header
             } catch (error) {
-                alert(error.message || 'Đăng nhập thất bại. Hãy kiểm tra lại tài khoản.');
+                showToast(error.message || 'Đăng nhập thất bại. Hãy kiểm tra lại tài khoản.', 'error');
             }
         }
 
@@ -2497,10 +2497,10 @@
                     throw new Error(errMsg);
                 }
 
-                alert('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
+                showToast('Đăng ký tài khoản thành công! Vui lòng đăng nhập.', 'success');
                 switchModalToLogin();
             } catch (error) {
-                alert(error.message || 'Đăng ký thất bại. Hãy thử tài khoản khác.');
+                showToast(error.message || 'Đăng ký thất bại. Hãy thử tài khoản khác.', 'error');
             }
         }
 
