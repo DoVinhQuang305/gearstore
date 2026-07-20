@@ -1237,7 +1237,8 @@
             now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         fetchProducts();
-        renderCustomers(mockCustomers);
+        const activeCustomers = loadCustomersFromOrders();
+        renderCustomers(activeCustomers);
     }
 
     // ===== MOCK SALES DATA =====
@@ -1276,84 +1277,188 @@
         return salesByHour;
     }
 
-    function renderDashboard(products) {
-        const salesData = generateMockSalesData(products);
+    function loadCustomersFromOrders() {
+        let orders = [];
+        try {
+            const ordersStr = localStorage.getItem('gs_orders');
+            if (ordersStr) orders = JSON.parse(ordersStr);
+        } catch (e) {
+            console.error(e);
+        }
 
-        // Compute totals
-        let totalRevenue = 0, totalOrders = 0, totalQty = 0;
-        const productSalesMap = {};
-
-        salesData.forEach(({ sales }) => {
-            sales.forEach(({ product, qty, revenue }) => {
-                totalRevenue += revenue;
-                totalOrders++;
-                totalQty += qty;
-                const id = product.productId;
-                if (!productSalesMap[id]) productSalesMap[id] = { product, qty: 0, revenue: 0 };
-                productSalesMap[id].qty += qty;
-                productSalesMap[id].revenue += revenue;
-            });
+        const customerMap = {};
+        orders.forEach(order => {
+            const c = order.customer;
+            if (c && c.phone) {
+                customerMap[c.phone] = {
+                    name: c.fullName,
+                    email: c.email || 'Không có',
+                    phone: c.phone,
+                    address: c.address || 'Không có',
+                    role: 'Khách mua hàng'
+                };
+            }
         });
 
-        // Update stat cards
+        const dynamicCustomers = [...mockCustomers];
+        Object.values(customerMap).forEach(dc => {
+            if (!dynamicCustomers.some(mc => mc.phone === dc.phone)) {
+                dynamicCustomers.unshift(dc);
+            }
+        });
+
+        return dynamicCustomers;
+    }
+
+    function renderDashboard(products) {
+        // Đọc đơn hàng thật từ localStorage
+        let orders = [];
+        try {
+            const ordersStr = localStorage.getItem('gs_orders');
+            if (ordersStr) orders = JSON.parse(ordersStr);
+        } catch (e) {
+            console.error(e);
+        }
+
+        let totalRevenue = 0;
+        let totalOrders = orders.length;
+        let totalQty = 0;
+        const productSalesMap = {};
+        
+        // Khởi tạo mảng thống kê theo giờ (24 giờ)
+        const hourlySalesData = Array.from({ length: 24 }, (_, i) => ({ hour: i, sales: [] }));
+
+        if (orders.length > 0) {
+            // Có đơn hàng thật -> Dựng báo cáo từ đơn hàng thật
+            orders.forEach(order => {
+                totalRevenue += order.total;
+                
+                // Trích xuất giờ đặt hàng
+                const orderHour = new Date(order.date).getHours();
+                
+                order.items.forEach(item => {
+                    totalQty += item.qty;
+                    
+                    // Gom nhóm top sản phẩm bán chạy
+                    const id = item.productId;
+                    if (!productSalesMap[id]) {
+                        productSalesMap[id] = { 
+                            product: products.find(p => p.productId === id) || item, 
+                            qty: 0, 
+                            revenue: 0 
+                        };
+                    }
+                    productSalesMap[id].qty += item.qty;
+                    productSalesMap[id].revenue += item.price * item.qty;
+
+                    // Đẩy vào thống kê theo khung giờ
+                    hourlySalesData[orderHour].sales.push({
+                        product: products.find(p => p.productId === id) || item,
+                        qty: item.qty,
+                        revenue: item.price * item.qty
+                    });
+                });
+            });
+        } else {
+            // Chưa có đơn hàng -> Dùng mock sales data để hiển thị demo sinh động
+            const salesData = generateMockSalesData(products);
+            salesData.forEach(({ hour, sales }) => {
+                sales.forEach(({ product, qty, revenue }) => {
+                    totalRevenue += revenue;
+                    totalOrders++;
+                    totalQty += qty;
+                    const id = product.productId;
+                    if (!productSalesMap[id]) productSalesMap[id] = { product, qty: 0, revenue: 0 };
+                    productSalesMap[id].qty += qty;
+                    productSalesMap[id].revenue += revenue;
+
+                    hourlySalesData[hour].sales.push({ product, qty, revenue });
+                });
+            });
+        }
+
+        // Cập nhật thẻ thống kê
         document.getElementById('statRevenue').textContent = formatVND(totalRevenue);
         document.getElementById('statOrders').textContent = totalOrders;
         document.getElementById('statQty').textContent = totalQty;
         document.getElementById('statProducts').textContent = products.length;
 
-        // Render hourly sales table
+        // Render bảng khung giờ bán hàng (chỉ lấy các giờ có phát sinh đơn hàng)
         const tbody = document.getElementById('hourSalesBody');
         tbody.innerHTML = '';
-        salesData.forEach(({ hour, sales }) => {
-            const timeLabel = `${String(hour).padStart(2,'0')}:00 - ${String(hour+1).padStart(2,'0')}:00`;
-            sales.forEach((item, idx) => {
-                const tr = document.createElement('tr');
-                const hourRevenue = sales.reduce((s, i) => s + i.revenue, 0);
-                tr.innerHTML = `
-                    <td>${idx === 0 ? `<span class="hour-badge"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${timeLabel}</span>` : ''}</td>
-                    <td>
-                        <div class="product-in-hour">
-                            <img class="product-mini-img" src="${item.product.imageUrl || 'https://placehold.co/32x32/f1f5f9/333?text=?'}" alt="" onerror="this.src='https://placehold.co/32x32/f1f5f9/333?text=?'">
-                            <div>
-                                <div class="product-mini-name">${item.product.name}</div>
-                                <div class="product-mini-id">${item.product.productId}</div>
+        
+        const activeHours = hourlySalesData.filter(d => d.sales.length > 0);
+        
+        if (activeHours.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--text-muted);">Hôm nay chưa phát sinh đơn hàng nào</td></tr>`;
+        } else {
+            activeHours.forEach(({ hour, sales }) => {
+                const timeLabel = `${String(hour).padStart(2,'0')}:00 - ${String(hour+1).padStart(2,'0')}:00`;
+                sales.forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    const hourRevenue = sales.reduce((s, i) => s + i.revenue, 0);
+                    tr.innerHTML = `
+                        <td>${idx === 0 ? `<span class="hour-badge"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${timeLabel}</span>` : ''}</td>
+                        <td>
+                            <div class="product-in-hour">
+                                <img class="product-mini-img" src="${item.product.imageUrl || 'https://placehold.co/32x32/f1f5f9/333?text=?'}" alt="" onerror="this.src='https://placehold.co/32x32/f1f5f9/333?text=?'">
+                                <div>
+                                    <div class="product-mini-name">${item.product.name}</div>
+                                    <div class="product-mini-id">${item.product.productId}</div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td><span class="qty-badge">×${item.qty}</span></td>
-                    <td>${idx === 0 ? `<span class="revenue-text">${formatVND(hourRevenue)}</span>` : ''}</td>
-                `;
-                tbody.appendChild(tr);
+                        </td>
+                        <td><span class="qty-badge">×${item.qty}</span></td>
+                        <td>${idx === 0 ? `<span class="revenue-text">${formatVND(hourRevenue)}</span>` : ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             });
-        });
+        }
 
-        // Render top products
+        // Render top sản phẩm bán chạy nhất
         const topProducts = Object.values(productSalesMap)
-            .sort((a, b) => b.revenue - a.revenue)
+            .sort((a, b) => b.qty - a.qty)
             .slice(0, 5);
 
         const rankClasses = ['gold', 'silver', 'bronze', 'other', 'other'];
         const rankLabels = ['#1', '#2', '#3', '#4', '#5'];
         const topList = document.getElementById('topProductsList');
         topList.innerHTML = '';
-        topProducts.forEach((item, i) => {
-            const div = document.createElement('div');
-            div.className = 'top-product-item';
-            div.innerHTML = `
-                <div class="top-rank ${rankClasses[i]}">${rankLabels[i]}</div>
-                <img class="top-product-img" src="${item.product.imageUrl || 'https://placehold.co/40x40/f1f5f9/333?text=?'}" alt="" onerror="this.src='https://placehold.co/40x40/f1f5f9/333?text=?'">
-                <div class="top-product-info">
-                    <div class="top-product-name">${item.product.name}</div>
-                    <div class="top-product-meta">Bán được: ${item.qty} sản phẩm</div>
-                </div>
-                <div class="top-product-rev">${formatVND(item.revenue)}</div>
-            `;
-            topList.appendChild(div);
-        });
+        
+        if (topProducts.length === 0) {
+            topList.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.82rem;">Chưa có sản phẩm bán chạy</div>`;
+        } else {
+            topProducts.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'top-product-item';
+                div.innerHTML = `
+                    <div class="top-rank ${rankClasses[i]}">${rankLabels[i]}</div>
+                    <img class="top-product-img" src="${item.product.imageUrl || 'https://placehold.co/40x40/f1f5f9/333?text=?'}" alt="" onerror="this.src='https://placehold.co/40x40/f1f5f9/333?text=?'">
+                    <div class="top-product-info">
+                        <div class="top-product-name">${item.product.name}</div>
+                        <div class="top-product-meta">Bán được: ${item.qty} sản phẩm</div>
+                    </div>
+                    <div class="top-product-rev">${formatVND(item.revenue)}</div>
+                `;
+                topList.appendChild(div);
+            });
+        }
 
-        // Render hourly chart
-        const labels = salesData.map(d => `${String(d.hour).padStart(2,'0')}h`);
-        const revenueByHour = salesData.map(d => d.sales.reduce((s, i) => s + i.revenue, 0));
+        // Render biểu đồ doanh thu theo giờ
+        // Lấy từ 8h sáng tới giờ hiện tại (hoặc 24h nếu có đơn hàng)
+        const currentHour = new Date().getHours();
+        const startHour = 8;
+        const chartData = [];
+        const labels = [];
+        
+        const endHour = orders.length > 0 ? 23 : currentHour;
+
+        for (let h = startHour; h <= endHour; h++) {
+            labels.push(`${String(h).padStart(2,'0')}h`);
+            const hourRevenue = hourlySalesData[h].sales.reduce((s, i) => s + i.revenue, 0);
+            chartData.push(hourRevenue);
+        }
 
         const ctx = document.getElementById('hourlyChart').getContext('2d');
         if (window._hourlyChart) window._hourlyChart.destroy();
@@ -1724,7 +1829,8 @@
         if (custSearch) {
             custSearch.addEventListener('input', function() {
                 const term = this.value.trim().toLowerCase();
-                const filtered = mockCustomers.filter(c => 
+                const activeCustomersList = loadCustomersFromOrders();
+                const filtered = activeCustomersList.filter(c => 
                     c.name.toLowerCase().includes(term) || 
                     c.email.toLowerCase().includes(term) ||
                     c.phone.includes(term) ||
