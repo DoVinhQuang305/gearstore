@@ -1007,7 +1007,7 @@
 
             <div class="card-table-wrapper">
                 <div class="table-header">
-                    <div class="search-box-wrapper">
+                    <div class="search-box-wrapper" style="max-width:320px;">
                         <i data-lucide="search" class="search-icon-svg"></i>
                         <input type="text" id="adminSearchInput" class="search-input" placeholder="Tìm kiếm mã hoặc tên sản phẩm...">
                     </div>
@@ -1040,15 +1040,30 @@
                     <i data-lucide="users" style="width:24px;height:24px;color:var(--primary-red);"></i>
                     Quản lý khách hàng
                 </div>
-                <p class="page-subtitle">Danh sách và thông tin khách hàng</p>
+                <p class="page-subtitle">Danh sách và thông tin khách hàng đăng ký</p>
             </div>
 
-            <div class="card">
-                <div class="customers-empty">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <h3>Chưa có dữ liệu khách hàng</h3>
-                    <p>Tính năng quản lý khách hàng sẽ được cập nhật trong phiên bản tiếp theo.</p>
+            <div class="card-table-wrapper">
+                <div class="table-header">
+                    <div class="search-box-wrapper" style="max-width:320px;">
+                        <i data-lucide="search" class="search-icon-svg"></i>
+                        <input type="text" id="customerSearchInput" class="search-input" placeholder="Tìm kiếm khách hàng...">
+                    </div>
                 </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Họ và Tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ nhận hàng</th>
+                            <th>Vai trò</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <!-- Dynamic customers list -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
@@ -1197,6 +1212,7 @@
             now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         fetchProducts();
+        renderCustomers(mockCustomers);
     }
 
     // ===== MOCK SALES DATA =====
@@ -1616,6 +1632,36 @@
         }
     }
 
+    // ===== CUSTOMERS MANAGEMENT =====
+    const mockCustomers = [
+        { name: 'Nguyễn Văn Hùng', email: 'hung.nguyen@gmail.com', phone: '0912345678', address: '12 Lạc Long Quân, Q.11, TP.HCM', role: 'Thành viên VIP' },
+        { name: 'Trần Thị Mai', email: 'mai.tran@yahoo.com', phone: '0987654321', address: '456 Lê Lợi, Q. Gò Vấp, TP.HCM', role: 'Thành viên mới' },
+        { name: 'Lê Hoàng Nam', email: 'nam.le@hotmail.com', phone: '0909090909', address: '78 Nguyễn Trãi, Q.5, TP.HCM', role: 'Thành viên VIP' },
+        { name: 'Phạm Minh Tuấn', email: 'tuan.pham@gmail.com', phone: '0888777666', address: '321 Độc Lập, Q. Tân Phú, TP.HCM', role: 'Thành viên mới' },
+        { name: 'Đỗ Thị Ngọc', email: 'ngoc.do@gmail.com', phone: '0933445566', address: '15 Trần Hưng Đạo, Q.1, TP.HCM', role: 'Thành viên VIP' }
+    ];
+
+    function renderCustomers(list) {
+        const tbody = document.getElementById('customersTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        list.forEach(c => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:700;">${c.name}</td>
+                <td>${c.email}</td>
+                <td>${c.phone}</td>
+                <td>${c.address}</td>
+                <td><span style="background:${c.role.includes('VIP') ? 'rgba(215,0,24,0.1)' : 'rgba(59,130,246,0.1)'};color:${c.role.includes('VIP') ? 'var(--primary-red)' : 'var(--blue)'};font-size:0.75rem;padding:3px 8px;border-radius:20px;font-weight:700;">${c.role}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // Cập nhật Badge số lượng trên Sidebar
+        const badge = document.querySelector('.menu-badge');
+        if (badge) badge.textContent = list.length;
+    }
+
     // Preview image URL input
     document.addEventListener('DOMContentLoaded', () => {
         // Tự động kiểm tra session người dùng đã đăng nhập từ trang chủ
@@ -1647,6 +1693,22 @@
                 else { previewBox.style.display = 'none'; }
             });
         }
+
+        // Tìm kiếm khách hàng
+        const custSearch = document.getElementById('customerSearchInput');
+        if (custSearch) {
+            custSearch.addEventListener('input', function() {
+                const term = this.value.trim().toLowerCase();
+                const filtered = mockCustomers.filter(c => 
+                    c.name.toLowerCase().includes(term) || 
+                    c.email.toLowerCase().includes(term) ||
+                    c.phone.includes(term) ||
+                    c.address.toLowerCase().includes(term)
+                );
+                renderCustomers(filtered);
+            });
+        }
+
         // Init lucide for login screen
         lucide.createIcons();
     });
