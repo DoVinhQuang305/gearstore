@@ -3287,9 +3287,6 @@
             orders.unshift(newOrder); // Đẩy đơn hàng mới lên đầu
             localStorage.setItem('gs_orders', JSON.stringify(orders));
 
-            // Mô phỏng đặt hàng
-            alert(`🎉 Đặt hàng thành công!\n\nCảm ơn khách hàng ${fullName} đã tin tưởng GearStore.\nChúng tôi sẽ liên hệ giao hàng qua SĐT ${phone} tới địa chỉ:\n📍 ${address}\n\nPhương thức thanh toán: Tiền mặt khi nhận hàng (COD).`);
-            
             // Reset giỏ hàng
             cart = [];
             saveCart();
