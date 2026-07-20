@@ -703,6 +703,29 @@
             border-color: #ffcccc;
         }
 
+        .card-add-cart-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .card-add-cart-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-red-hover);
+        }
+
         .card-badge {
             position: absolute;
             top: 8px;
@@ -2010,6 +2033,61 @@
         </div>
     </div>
 
+    <!-- --- CHECKOUT MODAL POPUP --- -->
+    <div class="modal-overlay" id="checkoutModal" onclick="closeCheckoutModal(event)">
+        <div class="modal-card" style="max-width: 480px; border-radius: 12px; overflow: hidden;" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeCheckoutModal(null)">×</button>
+            <div style="padding: 1.5rem 1.5rem 0.5rem 1.5rem;">
+                <h2 style="font-size: 1.3rem; font-weight: 850; color: var(--primary-red); display: flex; align-items: center; gap: 0.5rem;">
+                    <i data-lucide="receipt" style="width: 22px; height: 22px;"></i> THÔNG TIN GIAO HÀNG
+                </h2>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Vui lòng điền thông tin để nhận hàng tại nhà.</p>
+            </div>
+            
+            <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; max-height: 65vh; overflow-y: auto;">
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Họ và Tên khách hàng</label>
+                    <input type="text" id="checkoutFullName" required placeholder="Nhập họ và tên" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Địa chỉ Email</label>
+                    <input type="email" id="checkoutEmail" required placeholder="Nhập email liên hệ" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Số điện thoại nhận hàng *</label>
+                    <input type="tel" id="checkoutPhone" required placeholder="Nhập số điện thoại của bạn" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Địa chỉ nhận hàng *</label>
+                    <input type="text" id="checkoutAddress" required placeholder="Nhập số nhà, tên đường, phường, quận..." style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.5rem;">
+                    <h3 style="font-size: 0.85rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;">Phương thức thanh toán</h3>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #fffbeb; border: 1px solid #fde68a; padding: 0.75rem 1rem; border-radius: 8px;">
+                        <input type="radio" id="paymentCod" name="paymentMethod" checked style="accent-color: var(--primary-red); cursor: pointer;">
+                        <label for="paymentCod" style="font-size: 0.85rem; font-weight: 750; color: #b45309; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                            💵 Thanh toán bằng tiền mặt khi nhận hàng (COD)
+                        </label>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 800; font-size: 0.95rem;">Tổng tiền:</span>
+                    <span style="font-weight: 900; font-size: 1.25rem; color: var(--primary-red);" id="checkoutTotalPriceText">0₫</span>
+                </div>
+                
+                <button type="submit" style="width: 100%; margin-top: 0.5rem; background: var(--primary-red); color: white; border: none; padding: 0.85rem; border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s;">
+                    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i> XÁC NHẬN ĐẶT HÀNG
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- --- DETAIL MODAL POPUP --- -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-card" onclick="event.stopPropagation()">
@@ -2392,7 +2470,7 @@
                 
                 let adminLink = '';
                 if (user.role === 'ADMIN') {
-                    adminLink = `<a href="/admin_v2.html" class="user-dropdown-item" style="color: var(--primary-red); font-weight: 700;">
+                    adminLink = `<a href="/admin.html" class="user-dropdown-item" style="color: var(--primary-red); font-weight: 700;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Trang Quản trị
                     </a>
@@ -2727,8 +2805,20 @@
                 }
                 card.appendChild(specsRow);
 
+                // Quick Add-to-Cart Button
+                const addCartBtn = document.createElement('button');
+                addCartBtn.className = 'card-add-cart-btn';
+                addCartBtn.innerHTML = '<i data-lucide="shopping-cart" style="width: 14px; height: 14px; stroke-width: 2.5;"></i>';
+                addCartBtn.title = 'Thêm vào giỏ hàng';
+                addCartBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    addToCartWithoutOpen(product.productId);
+                };
+                card.appendChild(addCartBtn);
+
                 grid.appendChild(card);
             });
+            lucide.createIcons();
         }
 
         // Show detailed product modal
@@ -2873,6 +2963,27 @@
             showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success');
         }
 
+        // Thêm vào giỏ hàng nhưng KHÔNG tự động mở popup
+        function addToCartWithoutOpen(productId) {
+            const product = allProducts.find(p => p.productId === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.productId === productId);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({
+                    productId: product.productId,
+                    name: product.name,
+                    price: product.price,
+                    imageUrl: product.imageUrl,
+                    qty: 1
+                });
+            }
+            saveCart();
+            showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+        }
+
         function renderCartItems() {
             const container = document.getElementById('cartItemsList');
             container.innerHTML = '';
@@ -2943,12 +3054,63 @@
             showToast('Đã xóa sản phẩm khỏi giỏ hàng', 'warning');
         }
 
+        // Mở Form thanh toán mới
         function checkoutCart() {
             if (cart.length === 0) return;
-            alert('Cảm ơn bạn đã tin tưởng GearStore! Đơn đặt hàng của bạn đã được khởi tạo thành công trên hệ thống. Nhân viên tư vấn của chúng tôi sẽ gọi lại ngay để xác nhận đơn hàng.');
+            
+            // Ẩn modal giỏ hàng
+            document.getElementById('cartModal').style.display = 'none';
+
+            // Auto-fill thông tin khách hàng nếu đã đăng nhập
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('checkoutFullName').value = user.fullName || '';
+                document.getElementById('checkoutEmail').value = user.email || '';
+            } else {
+                document.getElementById('checkoutFullName').value = '';
+                document.getElementById('checkoutEmail').value = '';
+            }
+
+            // Reset sdt và địa chỉ
+            document.getElementById('checkoutPhone').value = '';
+            document.getElementById('checkoutAddress').value = '';
+
+            // Tính tổng tiền
+            let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+            document.getElementById('checkoutTotalPriceText').textContent = formatVND(total);
+
+            // Hiện modal thanh toán
+            document.getElementById('checkoutModal').style.display = 'flex';
+            lucide.createIcons();
+        }
+
+        function closeCheckoutModal(event) {
+            if (!event || event.target === document.getElementById('checkoutModal')) {
+                document.getElementById('checkoutModal').style.display = 'none';
+            }
+        }
+
+        function handleCheckoutSubmit(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('checkoutFullName').value.trim();
+            const email = document.getElementById('checkoutEmail').value.trim();
+            const phone = document.getElementById('checkoutPhone').value.trim();
+            const address = document.getElementById('checkoutAddress').value.trim();
+
+            if (!fullName || !email || !phone || !address) {
+                alert('Vui lòng điền đầy đủ các thông tin bắt buộc.');
+                return;
+            }
+
+            // Mô phỏng đặt hàng
+            alert(`🎉 Đặt hàng thành công!\n\nCảm ơn khách hàng ${fullName} đã tin tưởng GearStore.\nChúng tôi sẽ liên hệ giao hàng qua SĐT ${phone} tới địa chỉ:\n📍 ${address}\n\nPhương thức thanh toán: Tiền mặt khi nhận hàng (COD).`);
+            
+            // Reset giỏ hàng
             cart = [];
             saveCart();
-            document.getElementById('cartModal').style.display = 'none';
+            document.getElementById('checkoutModal').style.display = 'none';
+            showToast('Đặt hàng thành công!', 'success');
         }
 
         // Trigger on load
