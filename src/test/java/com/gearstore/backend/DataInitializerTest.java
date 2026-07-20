@@ -1,7 +1,9 @@
 package com.gearstore.backend;
 
 import com.gearstore.backend.entity.ProductEntity;
+import com.gearstore.backend.entity.UserEntity;
 import com.gearstore.backend.repository.ProductRepository;
+import com.gearstore.backend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +17,9 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
@@ -23,6 +27,9 @@ public class DataInitializerTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${aws.dynamodb.accesskey}")
     private String accessKey;
@@ -37,9 +44,30 @@ public class DataInitializerTest {
 
     @Test
     public void pushDataToAWS() {
-        System.out.println("=== BAT DAU UPLOAD ANH LEN S3 & LUU VAO DYNAMODB ===");
+        System.out.println("=== BAT DAU UPLOAD ANH LEN S3 & LUU TOAN BO DULIEU VAO DYNAMODB ===");
 
-        // Khởi tạo S3Client bằng key đã có trong application.properties
+        // Khởi tạo bảng Users và lưu tài khoản mẫu
+        userRepository.createTableIfNotExists();
+        System.out.println("⏳ Đang chờ bảng GearStore_Users chuyển sang ACTIVE...");
+        
+        boolean saved = false;
+        for (int i = 0; i < 6; i++) { // Thử tối đa 6 lần (30 giây)
+            try {
+                userRepository.saveUser(new UserEntity("admin", "admin123", "Quản trị viên GearStore", "ADMIN", "admin@gearstore.vn"));
+                userRepository.saveUser(new UserEntity("user", "user123", "Nguyễn Văn A", "USER", "user@gmail.com"));
+                saved = true;
+                break;
+            } catch (Exception e) {
+                System.out.println("⏳ Bảng đang khởi tạo, chờ 5 giây rồi thử lại...");
+                try { Thread.sleep(5000); } catch (InterruptedException ie) {}
+            }
+        }
+        if (saved) {
+            System.out.println("✅ Đã khởi tạo dữ liệu tài khoản Admin & User thành công!");
+        } else {
+            System.out.println("❌ Không thể khởi tạo tài khoản mẫu.");
+        }
+
         S3Client s3Client = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(
@@ -47,7 +75,7 @@ public class DataInitializerTest {
                 ))
                 .build();
 
-        // Đường dẫn tương đối đến các file ảnh tĩnh trong project
+        // 1. Upload 5 file ảnh gốc lên S3 và lấy URL tương ứng
         Map<String, String> localImages = new HashMap<>();
         localImages.put("LAP003", "src/main/resources/static/images/LAP003.png");
         localImages.put("PC001", "src/main/resources/static/images/PC001.png");
@@ -55,93 +83,19 @@ public class DataInitializerTest {
         localImages.put("MS001", "src/main/resources/static/images/MS001.png");
         localImages.put("MON001", "src/main/resources/static/images/MON001.png");
 
-        Map<String, ProductEntity> products = new HashMap<>();
+        Map<String, String> uploadedUrls = new HashMap<>();
 
-        // 1. LAP003: ASUS ROG Strix G16
-        ProductEntity lap003 = new ProductEntity();
-        lap003.setProductId("LAP003");
-        lap003.setRecordType("PRODUCT_INFO");
-        lap003.setName("Laptop Gaming ASUS ROG Strix G16 G614JV");
-        lap003.setPrice(34990000.0);
-        Map<String, String> lapSpecs = new HashMap<>();
-        lapSpecs.put("CPU", "Intel Core i7 13650HX (Up to 4.9 GHz, 14 cores, 20 threads)");
-        lapSpecs.put("Ram", "16GB DDR5 4800MHz (2x8GB, hỗ trợ nâng cấp)");
-        lapSpecs.put("VGA", "NVIDIA GeForce RTX 4060 8GB GDDR6");
-        lapSpecs.put("Màn hình", "16 inch WUXGA 165Hz IPS");
-        lap003.setAttributes(lapSpecs);
-        products.put("LAP003", lap003);
-
-        // 2. PC001: PC GVN Intel i5 / RTX 4060
-        ProductEntity pc001 = new ProductEntity();
-        pc001.setProductId("PC001");
-        pc001.setRecordType("PRODUCT_INFO");
-        pc001.setName("PC GVN Intel Core i5 / RTX 4060");
-        pc001.setPrice(21500000.0);
-        Map<String, String> pcSpecs = new HashMap<>();
-        pcSpecs.put("CPU", "Intel Core i5 13400F (Up to 4.6 GHz, 10 cores, 16 threads)");
-        pcSpecs.put("Ram", "16GB DDR4 3200MHz (Dual Channel)");
-        pcSpecs.put("VGA", "GeForce RTX 4060 8GB GDDR6");
-        pcSpecs.put("Nguồn", "650W 80 Plus Bronze");
-        pc001.setAttributes(pcSpecs);
-        products.put("PC001", pc001);
-
-        // 3. KB001: Akko mechanical keyboard
-        ProductEntity kb001 = new ProductEntity();
-        kb001.setProductId("KB001");
-        kb001.setRecordType("PRODUCT_INFO");
-        kb001.setName("Bàn phím cơ AKKO 3098B Multi-Modes Retro");
-        kb001.setPrice(2390000.0);
-        Map<String, String> kbSpecs = new HashMap<>();
-        kbSpecs.put("Switch", "Akko CS Jelly White (Linear)");
-        kbSpecs.put("Kết nối", "Bluetooth 5.0 / Wireless 2.4Ghz / Type-C");
-        kbSpecs.put("Layout", "98 phím (gọn nhẹ có Numpad)");
-        kbSpecs.put("Keycap", "PBT Double-Shot, OEM profile");
-        kb001.setAttributes(kbSpecs);
-        products.put("KB001", kb001);
-
-        // 4. MS001: Logitech G502
-        ProductEntity ms001 = new ProductEntity();
-        ms001.setProductId("MS001");
-        ms001.setRecordType("PRODUCT_INFO");
-        ms001.setName("Chuột Gaming Logitech G502 Hero High Performance");
-        ms001.setPrice(1090000.0);
-        Map<String, String> msSpecs = new HashMap<>();
-        msSpecs.put("DPI", "100 - 25,600 DPI");
-        msSpecs.put("Mắt đọc", "HERO 25K chuyên nghiệp");
-        msSpecs.put("Nút bấm", "11 nút lập trình được qua G Hub");
-        msSpecs.put("Trọng lượng", "121g (có kèm tạ điều chỉnh)");
-        ms001.setAttributes(msSpecs);
-        products.put("MS001", ms001);
-
-        // 5. MON001: ASUS TUF Monitor
-        ProductEntity mon001 = new ProductEntity();
-        mon001.setProductId("MON001");
-        mon001.setRecordType("PRODUCT_INFO");
-        mon001.setName("Màn hình ASUS TUF Gaming VG279Q3A 27\" Fast IPS 180Hz");
-        mon001.setPrice(4890000.0);
-        Map<String, String> monSpecs = new HashMap<>();
-        monSpecs.put("Kích thước", "27 inch Flat");
-        monSpecs.put("Tấm nền", "Fast IPS (Màu sắc chuẩn, góc nhìn rộng)");
-        monSpecs.put("Tần số quét", "180Hz (Phản hồi siêu tốc 1ms)");
-        monSpecs.put("Độ phân giải", "Full HD (1920 x 1080)");
-        mon001.setAttributes(monSpecs);
-        products.put("MON001", mon001);
-
-        // Tiến hành upload S3 và lưu DynamoDB
         for (String id : localImages.keySet()) {
             String imagePath = localImages.get(id);
             String s3Key = id + ".png";
             File file = new File(imagePath);
 
             if (!file.exists()) {
-                System.out.println("❌ Không tìm thấy file ảnh: " + imagePath);
+                System.out.println("❌ Không tìm thấy file ảnh local: " + imagePath);
                 continue;
             }
 
             try {
-                System.out.println("📤 Đang upload file " + s3Key + " lên S3 bucket: " + BUCKET_NAME);
-                
-                // Thử upload có ACL public read, nếu bucket chặn ACL thì fallback upload thường
                 try {
                     s3Client.putObject(
                             PutObjectRequest.builder()
@@ -152,9 +106,7 @@ public class DataInitializerTest {
                                     .build(),
                             Paths.get(imagePath)
                     );
-                    System.out.println("👉 Đã upload thành công với ACL public-read.");
                 } catch (Exception e) {
-                    System.out.println("⚠️ Bucket không hỗ trợ ACL hoặc bị chặn. Đang upload mặc định...");
                     s3Client.putObject(
                             PutObjectRequest.builder()
                                     .bucket(BUCKET_NAME)
@@ -163,26 +115,89 @@ public class DataInitializerTest {
                                     .build(),
                             Paths.get(imagePath)
                     );
-                    System.out.println("👉 Đã upload thành công không dùng ACL.");
                 }
-
-                // Tạo S3 URL của ảnh
                 String s3Url = "https://" + BUCKET_NAME + ".s3." + region + ".amazonaws.com/" + s3Key;
-                System.out.println("🔗 S3 Image URL: " + s3Url);
-
-                // Gán link ảnh S3 vào sản phẩm và lưu lên DynamoDB
-                ProductEntity product = products.get(id);
-                product.setImageUrl(s3Url);
-                
-                System.out.println("💾 Đang lưu " + id + " vào DynamoDB...");
-                productRepository.saveProduct(product);
-                System.out.println("🎉 Lưu thành công " + id + " lên DynamoDB!");
-
+                uploadedUrls.put(id, s3Url);
+                System.out.println("📤 Uploaded S3: " + id + " -> " + s3Url);
             } catch (Exception e) {
-                System.out.println("❌ Lỗi khi xử lý sản phẩm " + id + ": " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("❌ Lỗi upload ảnh " + id + ": " + e.getMessage());
             }
         }
-        System.out.println("=== HOÀN THÀNH TẤT CẢ UPLOAD S3 & DYNAMODB ===");
+
+        // 2. Khai báo danh sách 15 sản phẩm đa dạng mẫu mã và phân khúc
+        List<ProductEntity> list = new ArrayList<>();
+
+        // LAPTOPS (ASUS, ACER, MSI, LENOVO)
+        list.add(createProduct("LAP001", "Laptop ASUS Zenbook 14 OLED UX3402", 19990000.0, uploadedUrls.get("LAP003"),
+                Map.of("Hãng", "ASUS", "CPU", "Intel Core i5 1240P", "Ram", "16GB LPDDR5", "VGA", "Intel Iris Xe Graphics", "Màn hình", "14 inch 2.8K OLED")));
+        
+        list.add(createProduct("LAP002", "Laptop Acer Aspire 3 A315", 11500000.0, uploadedUrls.get("LAP003"),
+                Map.of("Hãng", "Acer", "CPU", "Intel Core i3 1215U", "Ram", "8GB DDR4", "VGA", "Intel UHD Graphics", "Màn hình", "15.6 inch Full HD")));
+        
+        list.add(createProduct("LAP003", "Laptop Gaming ASUS ROG Strix G16 G614JV", 34990000.0, uploadedUrls.get("LAP003"),
+                Map.of("Hãng", "ASUS", "CPU", "Intel Core i7 13650HX", "Ram", "16GB DDR5", "VGA", "NVIDIA GeForce RTX 4060", "Màn hình", "16 inch 165Hz")));
+
+        list.add(createProduct("LAP004", "Laptop Lenovo ThinkBook 14 G6", 16800000.0, uploadedUrls.get("LAP003"),
+                Map.of("Hãng", "Lenovo", "CPU", "Intel Core i5 1335U", "Ram", "16GB DDR5", "VGA", "Intel Iris Xe Graphics", "Màn hình", "14 inch Full HD")));
+
+        list.add(createProduct("LAP005", "Laptop MSI Modern 15 B7M", 13990000.0, uploadedUrls.get("LAP003"),
+                Map.of("Hãng", "MSI", "CPU", "AMD Ryzen 5 7530U", "Ram", "8GB DDR4", "VGA", "AMD Radeon Graphics", "Màn hình", "15.6 inch Full HD")));
+
+        // PC GVN
+        list.add(createProduct("PC001", "PC GVN Intel Core i5 / RTX 4060", 21500000.0, uploadedUrls.get("PC001"),
+                Map.of("Hãng", "GVN", "CPU", "Intel Core i5 13400F", "Ram", "16GB DDR4", "VGA", "GeForce RTX 4060", "Nguồn", "650W 80 Plus")));
+
+        list.add(createProduct("PC002", "PC GVN Student Core i3", 9990000.0, uploadedUrls.get("PC001"),
+                Map.of("Hãng", "GVN", "CPU", "Intel Core i3 12100F", "Ram", "8GB DDR4", "VGA", "Intel UHD Graphics", "Nguồn", "450W")));
+
+        list.add(createProduct("PC003", "PC GVN VIP Core i7 / RTX 4070", 42500000.0, uploadedUrls.get("PC001"),
+                Map.of("Hãng", "GVN", "CPU", "Intel Core i7 14700F", "Ram", "32GB DDR5", "VGA", "GeForce RTX 4070", "Nguồn", "750W Gold")));
+
+        // KEYBOARDS
+        list.add(createProduct("KB001", "Bàn phím cơ AKKO 3098B Multi-Modes Retro", 2390000.0, uploadedUrls.get("KB001"),
+                Map.of("Hãng", "AKKO", "Switch", "Akko CS Jelly White", "Kết kết nối", "Wireless / Bluetooth", "Layout", "98 phím")));
+
+        list.add(createProduct("KB002", "Bàn phím cơ Corsair K70 RGB MK.2", 3890000.0, uploadedUrls.get("KB001"),
+                Map.of("Hãng", "Corsair", "Switch", "Cherry MX Red", "Kết kết nối", "Wired USB", "Layout", "Full size")));
+
+        // MICE
+        list.add(createProduct("MS001", "Chuột Gaming Logitech G502 Hero High Performance", 1090000.0, uploadedUrls.get("MS001"),
+                Map.of("Hãng", "Logitech", "DPI", "25,600 DPI", "Mắt đọc", "HERO 25K", "Nút bấm", "11 nút lập trình")));
+
+        list.add(createProduct("MS002", "Chuột Gaming Razer DeathAdder V3", 1890000.0, uploadedUrls.get("MS001"),
+                Map.of("Hãng", "Razer", "DPI", "30,000 DPI", "Mắt đọc", "Focus Pro 30K", "Trọng lượng", "59g")));
+
+        // MONITORS
+        list.add(createProduct("MON001", "Màn hình ASUS TUF Gaming VG279Q3A 27\" Fast IPS 180Hz", 4890000.0, uploadedUrls.get("MON001"),
+                Map.of("Hãng", "ASUS", "Kích thước", "27 inch", "Tần số quét", "180Hz", "Độ phân giải", "Full HD (1920x1080)")));
+
+        list.add(createProduct("MON002", "Màn hình Dell UltraSharp U2424H 24\" IPS 120Hz", 6490000.0, uploadedUrls.get("MON001"),
+                Map.of("Hãng", "Dell", "Kích thước", "24 inch", "Tần số quét", "120Hz", "Độ phân giải", "Full HD (1920x1080)")));
+
+        // HEADPHONE
+        list.add(createProduct("EP001", "Tai nghe Gaming Kingston HyperX Cloud II", 1950000.0, uploadedUrls.get("MS001"),
+                Map.of("Hãng", "HyperX", "Kết nối", "Wired Jack 3.5mm / USB soundcard", "Âm thanh", "Giả lập 7.1 Surround Sound")));
+
+        // 3. Tiến hành lưu tất cả vào DynamoDB
+        for (ProductEntity p : list) {
+            try {
+                System.out.println("💾 Đang lưu: " + p.getProductId() + " - " + p.getName());
+                productRepository.saveProduct(p);
+            } catch (Exception e) {
+                System.out.println("❌ Lỗi khi lưu sản phẩm " + p.getProductId() + ": " + e.getMessage());
+            }
+        }
+        System.out.println("🎉 HOÀN THÀNH TẤT CẢ LƯU DỮ LIỆU DYNAMODB!");
+    }
+
+    private ProductEntity createProduct(String id, String name, double price, String imgUrl, Map<String, String> specs) {
+        ProductEntity p = new ProductEntity();
+        p.setProductId(id);
+        p.setRecordType("PRODUCT_INFO");
+        p.setName(name);
+        p.setPrice(price);
+        p.setImageUrl(imgUrl);
+        p.setAttributes(specs);
+        return p;
     }
 }

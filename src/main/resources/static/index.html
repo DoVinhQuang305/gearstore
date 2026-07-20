@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GearStore - Thiết bị Gaming & PC Cao Cấp</title>
-    <!-- Google Font Plus Jakarta Sans -->
+    <title>GearStore - Hệ thống bán lẻ máy tính, laptop gaming, linh kiện chính hãng</title>
+    <!-- Plus Jakarta Sans Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for Minimalism Style -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Identity Services (để kích hoạt đăng nhập Google thật) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         :root {
-            --gear-red: #e3001b;
-            --gear-red-dark: #b80014;
-            --bg-body: #f4f4f4;
+            --primary-red: #d70018;
+            --primary-red-hover: #b50012;
+            --bg-light: #f4f4f4;
             --white: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #4b5563;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
             --text-light: #9ca3af;
-            --border-light: #e5e7eb;
-            --success: #10b981;
-            --bg-footer: #18181c;
-            --bg-footer-bottom: #0f0f12;
+            --border-color: #e5e7eb;
+            --accent-yellow: #f59e0b;
+            --success-green: #10b981;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -32,626 +38,766 @@
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- RED HEADER --- */
+        /* --- CELLPHONES STYLE RED HEADER --- */
         header {
-            background-color: var(--gear-red);
-            padding: 0.75rem 0;
+            background-color: var(--primary-red);
+            color: var(--white);
             position: sticky;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            overflow: visible;
         }
 
         .header-container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0.6rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
-        .logo-section {
+        .logo-link {
+            text-decoration: none;
+            color: var(--white);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--white);
-            text-decoration: none;
+            gap: 0.4rem;
         }
 
-        .logo-text {
+        .logo-title {
             font-size: 1.8rem;
-            font-weight: 800;
+            font-weight: 850;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
         }
 
-        .logo-text span {
-            background: var(--white);
-            color: var(--gear-red);
-            padding: 0.1rem 0.5rem;
+        .logo-title span {
+            background-color: var(--white);
+            color: var(--primary-red);
+            padding: 0.05rem 0.4rem;
             border-radius: 4px;
-            margin-left: 0.2rem;
+            margin-left: 0.15rem;
             font-weight: 900;
+            font-size: 1.5rem;
         }
 
-        .category-btn {
-            background-color: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+        .header-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        /* User dropdown menu styles */
+        .user-menu-wrapper {
+            position: relative;
+        }
+
+        .user-avatar-btn {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .category-btn:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-        }
-
-        .search-container {
-            flex-grow: 1;
-            max-width: 550px;
-        }
-
-        .search-box {
-            display: flex;
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.65rem 1rem;
-            border: none;
-            border-radius: 6px 0 0 6px;
-            outline: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .search-button {
-            background-color: #333333;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
             color: var(--white);
-            border: none;
-            padding: 0 1.25rem;
-            border-radius: 0 6px 6px 0;
+            padding: 0.4rem 0.65rem;
             cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            font-size: 0.9rem;
+            transition: background 0.2s;
         }
 
-        .search-button:hover {
-            background-color: #000000;
+        .user-avatar-btn:hover {
+            background: rgba(255,255,255,0.22);
         }
 
-        .header-links {
+        .user-avatar-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            color: white;
             display: flex;
             align-items: center;
-            gap: 1.25rem;
-            color: var(--white);
+            justify-content: center;
+            font-weight: 800;
             font-size: 0.85rem;
-            font-weight: 500;
+            flex-shrink: 0;
         }
 
-        .header-link-item {
+        .user-dropdown-menu {
+            position: fixed;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            min-width: 210px;
+            z-index: 99999;
+            overflow: hidden;
+            animation: dropFadeIn 0.15s ease;
+        }
+
+        @keyframes dropFadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-dropdown-item {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            text-decoration: none;
-            color: var(--white);
-            transition: opacity 0.2s;
-        }
-
-        .header-link-item:hover {
-            opacity: 0.85;
-        }
-
-        /* --- SUB HEADER LINKS BAR --- */
-        .sub-header-bar {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-light);
-            padding: 0.5rem 0;
-        }
-
-        .sub-header-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            font-size: 0.8rem;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            font-size: 0.82rem;
             font-weight: 600;
-            color: #4b5563;
-            overflow-x: auto;
-            white-space: nowrap;
+            color: #374151;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s;
         }
 
-        .sub-header-item {
+        .user-dropdown-item:hover {
+            background: #f9fafb;
+        }
+
+        .search-wrapper {
+            flex-grow: 1;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .search-form {
+            display: flex;
+            width: 100%;
+        }
+
+        .search-bar-input {
+            width: 100%;
+            padding: 0.55rem 1rem;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+            font-size: 0.85rem;
+            font-weight: 550;
+            color: #374151;
+        }
+
+        .search-bar-btn {
+            background-color: #e5e7eb;
+            color: #374151;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .search-bar-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        .header-action-links {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            transition: background-color 0.2s, color 0.2s;
+            gap: 0.85rem;
         }
 
-        .sub-header-item:hover {
-            background-color: #f3f4f6;
-            color: var(--gear-red);
+        .action-link-item {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            gap: 0.15rem;
         }
 
-        /* --- MAIN WRAPPER LAYOUT --- */
-        .main-layout {
+        .action-link-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .cart-btn-wrapper {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: 12px;
+            background-color: var(--accent-yellow);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 800;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CATEGORIES & BANNER GRID --- */
+        .promo-container {
             max-width: 1200px;
             width: 100%;
-            margin: 1.5rem auto;
+            margin: 1rem auto;
             padding: 0 1rem;
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 1.5rem;
-            flex-grow: 1;
+            grid-template-columns: 220px 1fr 260px;
+            gap: 1rem;
         }
 
-        @media (max-width: 992px) {
-            .main-layout {
-                grid-template-columns: 1fr;
+        @media (max-width: 1024px) {
+            .promo-container {
+                grid-template-columns: 200px 1fr;
             }
-        }
-
-        /* --- SIDEBAR MENU --- */
-        .sidebar-menu {
-            background-color: var(--white);
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            align-self: start;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar-menu {
+            .side-banners {
                 display: none;
             }
         }
 
-        .sidebar-list {
-            list-style: none;
-        }
-
-        .sidebar-item a {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.7rem 1rem;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-bottom: 1px solid #f3f4f6;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .sidebar-item:last-child a {
-            border-bottom: none;
-        }
-
-        .sidebar-item a:hover {
-            background-color: #fef2f2;
-            color: var(--gear-red);
-        }
-
-        .sidebar-item-icon {
-            margin-right: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .sidebar-chevron {
-            color: #d1d5db;
-            font-size: 0.75rem;
-        }
-
-        /* --- CONTENT SECTION & CARD --- */
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .breadcrumb {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            display: flex;
-            gap: 0.4rem;
-        }
-
-        .breadcrumb a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--gear-red);
-        }
-
-        /* White Product Card */
-        .product-detail-card {
-            background-color: var(--white);
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 42% 1fr;
-            gap: 2rem;
-        }
-
         @media (max-width: 768px) {
-            .product-detail-card {
+            .promo-container {
                 grid-template-columns: 1fr;
-                padding: 1.25rem;
-                gap: 1.5rem;
+            }
+            .sidebar-categories {
+                display: none;
             }
         }
 
-        /* Product Gallery */
-        .product-gallery {
+        /* Sidebar categories Cellphones style */
+        .sidebar-categories {
+            background-color: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            position: relative; /* Setup relative positioning for absolute child mega-menus */
+            overflow: visible; /* MUST be visible to show absolute mega-menu */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
-        .main-image-wrapper {
+        /* Hiệu ứng nhấp nháy phát sáng làm điểm nhấn */
+        @keyframes glowPulse {
+            0% {
+                box-shadow: var(--shadow-sm);
+                border-color: var(--border-color);
+                transform: scale(1);
+            }
+            30% {
+                box-shadow: 0 0 20px 8px rgba(217, 0, 24, 0.65);
+                border-color: var(--primary-red);
+                transform: scale(1.03);
+            }
+            70% {
+                box-shadow: 0 0 20px 8px rgba(217, 0, 24, 0.65);
+                border-color: var(--primary-red);
+                transform: scale(1.03);
+            }
+            100% {
+                box-shadow: var(--shadow-sm);
+                border-color: var(--border-color);
+                transform: scale(1);
+            }
+        }
+
+        .sidebar-categories.highlight-glow {
+            animation: glowPulse 1.5s ease-in-out;
+        }
+
+        .category-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .category-item {
+            flex-grow: 1;
+            border-bottom: 1px solid #f3f4f6;
+            position: static; /* Let mega-menu position relative to .sidebar-categories */
+        }
+
+        .category-item:last-child {
+            border-bottom: none;
+        }
+
+        .category-item a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.8rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.74rem;
+            font-weight: 700;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .category-item a:hover {
+            background-color: var(--primary-red);
+            color: var(--white) !important;
+        }
+
+        .category-item a:hover .cat-arrow {
+            color: var(--white);
+        }
+
+        .cat-icon {
+            margin-right: 0.6rem;
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+            color: #4b5563; /* Xám tối giản */
+            transition: color 0.2s, stroke-width 0.2s, transform 0.2s;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .category-item:hover .cat-icon {
+            color: var(--white) !important;
+            stroke-width: 2.6;
+            transform: scale(1.1);
+        }
+
+        .cat-arrow {
+            color: #d1d5db;
+            font-size: 0.65rem;
+        }
+
+        /* --- MEGA MENU STYLING --- */
+        .mega-menu {
+            position: absolute;
+            top: 0;
+            left: calc(100% + 8px);
+            width: 780px;
+            min-height: 100%;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            border-radius: 0 10px 10px 0;
+            z-index: 200;
+            display: none;
+            padding: 1.5rem 1.75rem;
+            box-sizing: border-box;
+            animation: menuFadeIn 0.15s ease-out;
+        }
+
+        /* Bridge pseudo-element to cross the 8px hover gap */
+        .mega-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -12px;
+            width: 12px;
+            height: 100%;
+            background-color: transparent;
+            z-index: 10;
+        }
+
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: translateX(5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .category-item:hover .mega-menu {
+            display: block;
+        }
+
+        .mega-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .mega-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mega-col h5 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            margin-bottom: 0.65rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid #fee2e2;
+            padding-bottom: 0.2rem;
+            white-space: nowrap;
+        }
+
+        .mega-col a {
+            display: block !important;
+            padding: 0.3rem 0 !important;
+            color: #4b5563 !important;
+            text-decoration: none !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+            transition: color 0.2s, transform 0.2s;
+            border-bottom: none !important;
+        }
+
+        .mega-col a:hover {
+            color: var(--primary-red) !important;
+            background: none !important;
+            transform: translateX(3px);
+        }
+
+        /* Megamenu Bottom Grid */
+        .mega-bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .mega-bottom-col h6 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .mega-bottom-col a {
+            display: block !important;
+            padding: 0.25rem 0 !important;
+            color: #4b5563 !important;
+            text-decoration: none !important;
+            font-size: 0.72rem !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+            border-bottom: none !important;
+        }
+
+        .mega-bottom-col a:hover {
+            color: var(--primary-red) !important;
+            background: none !important;
+            transform: translateX(3px);
+        }
+
+        /* Center main slider */
+        .main-slider {
+            background-color: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slider-image-box {
             width: 100%;
-            aspect-ratio: 1;
+            height: 290px;
+            background: linear-gradient(135deg, #ffe3e3 0%, #ffc2c2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #f3f4f6;
-            border-radius: 6px;
-            padding: 1rem;
-            background-color: #fafafa;
             position: relative;
         }
 
-        .product-main-img {
+        .slider-content {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .slider-tag {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .slider-tabs {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            background-color: #fafafa;
+        }
+
+        .slider-tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.65rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-right: 1px solid var(--border-color);
+            color: #4b5563;
+        }
+
+        .slider-tab-item:last-child {
+            border-right: none;
+        }
+
+        .slider-tab-item.active {
+            background-color: var(--white);
+            color: var(--primary-red);
+            border-bottom: 3px solid var(--primary-red);
+        }
+
+        /* Right Banners */
+        .side-banners {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .side-banner-item {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .side-banner-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .banner-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .banner-txt-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: #111827;
+        }
+
+        .banner-txt-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        /* --- PRODUCTS GRID SECTION --- */
+        .products-section-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 22px;
+            background-color: var(--primary-red);
+            border-radius: 3px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.85rem;
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Card Cellphones style */
+        .product-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: #ffcccc;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: var(--primary-red);
+            color: var(--white);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .card-img-box {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            background-color: #fff;
+        }
+
+        .card-img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             transition: transform 0.3s;
         }
 
-        .main-image-wrapper:hover .product-main-img {
-            transform: scale(1.03);
+        .product-card:hover .card-img {
+            transform: scale(1.05);
         }
 
-        .aws-badge {
-            position: absolute;
-            top: 0.75rem;
-            left: 0.75rem;
-            background-color: #10b981;
-            color: var(--white);
-            font-size: 0.65rem;
+        .card-title {
+            font-size: 0.82rem;
             font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Product Info Description */
-        .product-info-wrapper {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #111827;
-            line-height: 1.3;
+            color: #1f2937;
+            line-height: 1.4;
+            height: 2.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             margin-bottom: 0.5rem;
         }
 
-        .product-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            padding-bottom: 0.75rem;
-        }
-
-        .meta-id {
-            background-color: #f3f4f6;
-            color: #4b5563;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
-            font-weight: 700;
-        }
-
-        .price-section {
-            background-color: #fafafa;
-            border-radius: 6px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
-            border: 1px dashed var(--border-light);
-        }
-
-        .price-row {
+        .card-price-row {
             display: flex;
             align-items: baseline;
-            gap: 1rem;
-        }
-
-        .price-current {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--gear-red);
-        }
-
-        .price-original {
-            font-size: 1.1rem;
-            text-decoration: line-through;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .price-discount {
-            background-color: #fee2e2;
-            color: var(--gear-red);
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-        }
-
-        /* Promos Box */
-        .promo-box {
-            border: 1px solid #fca5a5;
-            background-color: #fef2f2;
-            border-radius: 6px;
-            padding: 0.85rem 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .promo-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--gear-red);
-            margin-bottom: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .promo-list {
-            list-style: none;
-            font-size: 0.8rem;
-            color: #4b5563;
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .promo-list li::before {
-            content: "🎁 ";
-        }
-
-        /* Button Purchase */
-        .purchase-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-buy-now {
-            background-color: var(--gear-red);
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            padding: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-        }
-
-        .btn-buy-now:hover {
-            background-color: var(--gear-red-dark);
-        }
-
-        .btn-buy-now span:first-child {
-            font-size: 1.05rem;
-            text-transform: uppercase;
-        }
-
-        .btn-buy-now span:last-child {
-            font-size: 0.7rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-
-        .btn-installment {
-            background-color: #2563eb;
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            padding: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-        }
-
-        .btn-installment:hover {
-            background-color: #1d4ed8;
-        }
-
-        .btn-installment span:first-child {
-            font-size: 1.05rem;
-            text-transform: uppercase;
-        }
-
-        .btn-installment span:last-child {
-            font-size: 0.7rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-
-        /* Specs section */
-        .specs-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
             gap: 0.4rem;
+            margin-bottom: 0.4rem;
+            flex-wrap: wrap;
         }
 
-        .specs-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-        }
-
-        .specs-table tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        .specs-table td {
-            padding: 0.65rem 1rem;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .specs-table td:first-child {
-            font-weight: 600;
-            color: #4b5563;
-            width: 30%;
-            background-color: #f3f4f6;
-        }
-
-        .specs-table td:last-child {
-            color: #111827;
-        }
-
-        /* --- INTRO SECTION --- */
-        .intro-card {
-            background-color: var(--white);
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            padding: 2rem;
-            margin-top: 1rem;
-        }
-
-        .intro-title {
-            font-size: 1.25rem;
+        .card-price-current {
+            font-size: 0.95rem;
             font-weight: 800;
-            color: #111827;
-            border-left: 5px solid var(--gear-red);
-            padding-left: 0.75rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
+            color: var(--primary-red);
         }
 
-        .intro-desc {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: #4b5563;
-            margin-bottom: 1.5rem;
-            text-align: justify;
-        }
-
-        .intro-features-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.25rem;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .intro-features-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .intro-features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .feature-box {
-            background-color: #f9fafb;
-            border: 1px solid var(--border-light);
-            border-radius: 6px;
-            padding: 1rem;
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-color: #fca5a5;
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 0.25rem;
-        }
-
-        .feature-desc {
+        .card-price-original {
             font-size: 0.75rem;
-            color: var(--text-muted);
-            line-height: 1.4;
+            text-decoration: line-through;
+            color: var(--text-light);
         }
 
-        /* Loading Skeleton */
+        .card-specs-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-top: auto;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 0.5rem;
+        }
+
+        .card-spec-tag {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .card-rating {
+            font-size: 0.7rem;
+            color: var(--accent-yellow);
+            display: flex;
+            align-items: center;
+            gap: 0.15rem;
+            margin-bottom: 0.4rem;
+        }
+
+        /* --- SKELETON LOADER --- */
         .skeleton {
             background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
             background-size: 200% 100%;
@@ -663,47 +809,361 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Error state */
-        .error-card {
+        /* --- PREMIUM DETAILED MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-card {
             background-color: var(--white);
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            padding: 3rem;
-            text-align: center;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            position: relative;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: background-color 0.2s;
+            z-index: 2;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #e5e7eb;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 42% 1fr;
+            gap: 2rem;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                padding: 1.25rem;
+            }
+        }
+
+        .modal-left {
+            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .error-message {
-            font-size: 1.2rem;
+        .modal-img-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #f3f4f6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .modal-main-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .modal-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 0.75rem;
+        }
+
+        .modal-id-tag {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
             font-weight: 700;
-            color: var(--gear-red);
         }
 
-        .btn-retry {
-            background-color: var(--gear-red);
+        .modal-price-box {
+            background-color: #fff5f5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            border: 1px dashed #fca5a5;
+        }
+
+        .modal-price-current {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-red);
+        }
+
+        .modal-price-original {
+            font-size: 1.05rem;
+            text-decoration: line-through;
+            color: var(--text-light);
+            margin-left: 0.75rem;
+        }
+
+        .modal-promos {
+            border: 1px solid #fca5a5;
+            background-color: #fef2f2;
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-promo-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-promo-list {
+            list-style: none;
+            font-size: 0.78rem;
+            color: #4b5563;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .modal-promo-list li::before {
+            content: "🎁 ";
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn-buy {
+            background-color: var(--primary-red);
             color: var(--white);
             border: none;
-            padding: 0.65rem 1.5rem;
             border-radius: 6px;
+            padding: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-retry:hover {
-            background-color: var(--gear-red-dark);
+        .modal-btn-buy:hover {
+            background-color: var(--primary-red-hover);
         }
 
-        /* --- FOOTER DESIGN --- */
+        .modal-btn-buy span:first-child {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        .modal-btn-buy span:last-child {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+
+        .modal-btn-install {
+            background-color: #2563eb;
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-btn-install:hover {
+            background-color: #1d4ed8;
+        }
+
+        .modal-btn-install span:first-child {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        .modal-btn-install span:last-child {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+
+        .modal-specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .modal-specs-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .modal-specs-table td {
+            padding: 0.55rem 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-specs-table td:first-child {
+            font-weight: 600;
+            color: #4b5563;
+            width: 32%;
+            background-color: #f3f4f6;
+        }
+
+        /* --- INTRO SECTION --- */
+        .intro-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .intro-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+        }
+
+        .intro-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .intro-desc {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .feature-box {
+            background-color: #fafafa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-2px);
+            border-color: #fca5a5;
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* --- CELLPHONES STYLE FOOTER --- */
         footer {
-            background-color: var(--bg-footer);
-            color: #d1d5db;
-            margin-top: 3rem;
-            border-top: 4px solid var(--gear-red);
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
         }
 
         .footer-top {
@@ -718,7 +1178,7 @@
 
         @media (max-width: 992px) {
             .footer-top {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -729,21 +1189,12 @@
         }
 
         .footer-column h4 {
-            color: var(--white);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 800;
-            margin-bottom: 1.25rem;
+            color: #1f2937;
+            margin-bottom: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-left: 3px solid var(--gear-red);
-            padding-left: 0.5rem;
-        }
-
-        .footer-column p {
-            font-size: 0.8rem;
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-            color: #9ca3af;
         }
 
         .footer-column ul {
@@ -751,85 +1202,84 @@
         }
 
         .footer-column ul li {
-            margin-bottom: 0.65rem;
+            margin-bottom: 0.55rem;
         }
 
         .footer-column ul li a {
-            color: #9ca3af;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.8rem;
-            transition: color 0.2s, padding-left 0.2s;
-            display: inline-block;
+            font-size: 0.78rem;
+            transition: color 0.2s;
         }
 
         .footer-column ul li a:hover {
-            color: var(--white);
-            padding-left: 4px;
+            color: var(--primary-red);
         }
 
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .contact-item {
+        .phone-call-box {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: #1f2937;
+            margin-bottom: 0.8rem;
         }
 
-        .contact-item strong {
-            color: var(--white);
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .social-btn {
-            background-color: #2a2a30;
-            color: var(--white);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .phone-number {
+            color: var(--primary-red);
+            font-weight: 800;
+            font-size: 1rem;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
+            display: block;
+            margin-top: 0.15rem;
         }
 
-        .social-btn:hover {
-            background-color: var(--gear-red);
-        }
-
-        .payment-methods {
+        .payment-badges {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
             flex-wrap: wrap;
         }
 
-        .payment-badge {
-            background-color: var(--white);
-            color: #333333;
-            padding: 0.2rem 0.5rem;
+        .payment-badge-img {
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
             border-radius: 4px;
             font-size: 0.65rem;
-            font-weight: 700;
+            font-weight: 800;
+            color: #4b5563;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.75rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-red);
+            color: var(--white);
         }
 
         .footer-bottom {
-            background-color: var(--bg-footer-bottom);
+            background-color: #f4f4f4;
+            border-top: 1px solid var(--border-color);
             padding: 1.5rem 0;
-            border-top: 1px solid #232329;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-align: center;
-            color: #6b7280;
+            color: var(--text-light);
         }
 
         .footer-bottom-container {
@@ -842,6 +1292,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
+            color: var(--text-muted);
         }
 
         @media (max-width: 768px) {
@@ -851,13 +1302,12 @@
             }
         }
 
-        .bct-badge {
-            display: inline-block;
-            border: 1px solid #3b3b45;
-            padding: 0.25rem 0.5rem;
+        .cert-badge {
+            border: 1px solid #d1d5db;
+            color: var(--success-green);
+            padding: 0.2rem 0.5rem;
             border-radius: 4px;
-            color: #10b981;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.65rem;
             text-transform: uppercase;
         }
@@ -868,228 +1318,697 @@
     <!-- --- RED HEADER --- -->
     <header>
         <div class="header-container">
-            <a href="/" class="logo-section">
-                <div class="logo-text">GEAR<span>STORE</span></div>
+            <a href="/" class="logo-link">
+                <div class="logo-title">GEAR<span>STORE</span></div>
             </a>
             
-            <button class="category-btn">
-                <span>☰</span> Danh mục
+            <button class="header-btn" style="gap: 0.25rem;" onclick="highlightCategories()">
+                <i data-lucide="menu" style="width: 16px; height: 16px; stroke-width: 2.5;"></i> Danh mục
             </button>
             
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" id="productIdInput" class="search-input" placeholder="Bạn cần tìm laptop gì? (Ví dụ: LAP001, LAP002)">
-                    <button class="search-button" onclick="searchProduct()">Tìm kiếm</button>
+            <div class="search-wrapper" style="max-width: 480px;">
+                <div class="search-form">
+                    <input type="text" id="searchInput" class="search-bar-input" placeholder="Bạn cần tìm laptop, PC gì hôm nay?">
+                    <button class="search-bar-btn" onclick="searchProducts()">Tìm</button>
                 </div>
             </div>
             
-            <div class="header-links">
-                <a href="#" class="header-link-item">
-                    <span>📞</span> Hotline 1900.5301
+            <div class="header-action-links" style="gap: 1.25rem;">
+                <a href="tel:19005301" class="action-link-item">
+                    <i data-lucide="phone" style="width: 18px; height: 18px; stroke-width: 2.2; margin-bottom: 0.15rem;"></i>Gọi mua hàng<br><strong>1900.5301</strong>
                 </a>
-                <a href="#" class="header-link-item">
-                    <span>📍</span> Showroom
+                <a href="#" class="action-link-item cart-btn-wrapper">
+                    <i data-lucide="shopping-cart" style="width: 18px; height: 18px; stroke-width: 2.2; margin-bottom: 0.15rem;"></i>Giỏ hàng
+                    <span class="cart-badge">0</span>
                 </a>
-                <a href="#" class="header-link-item">
-                    <span>🛒</span> Giỏ hàng
-                </a>
+                <div id="userHeaderSection" style="display: flex; align-items: center; gap: 0.75rem;">
+                    <button class="header-btn" style="gap: 0.4rem; padding: 0.55rem 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.15);" onclick="openLoginModal()">
+                        <i data-lucide="user" style="width: 16px; height: 16px; stroke-width: 2.5;"></i> Đăng nhập
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- --- SUB HEADER LINKS BAR --- -->
-    <div class="sub-header-bar">
-        <div class="sub-header-container">
-            <div class="sub-header-item">🔥 BUILD PC tặng màn hình 240Hz</div>
-            <div class="sub-header-item">🔄 Thu cũ đổi mới</div>
-            <div class="sub-header-item">📰 Tin tức công nghệ</div>
-            <div class="sub-header-item">🛠️ Dịch vụ kỹ thuật tại nhà</div>
-            <div class="sub-header-item">🛡️ Tra cứu bảo hành</div>
-        </div>
-    </div>
-
-    <!-- --- MAIN WRAPPER LAYOUT --- -->
-    <div class="main-layout">
+    <!-- --- PROMO BANNER SECTION --- -->
+    <div class="promo-container">
         
-        <!-- Left Sidebar Categories -->
-        <aside class="sidebar-menu">
-            <ul class="sidebar-list">
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">💻</span>Laptop<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🎮</span>Laptop Gaming<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🖥️</span>PC GVN<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">⚙️</span>Main, CPU, VGA<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🔋</span>Case, Nguồn, Tản<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">💾</span>Ổ cứng, RAM, Thẻ nhớ<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🔊</span>Loa, Micro, Tai nghe<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">📺</span>Màn hình máy tính<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">⌨️</span>Bàn phím cơ<span class="sidebar-chevron">▶</span></a></li>
-                <li class="sidebar-item"><a href="#"><span class="sidebar-item-icon">🖱️</span>Chuột + Lót chuột<span class="sidebar-chevron">▶</span></a></li>
+        <!-- Left Categories -->
+        <aside class="sidebar-categories">
+            <ul class="category-list">
+                <!-- Laptop with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="laptop" class="cat-icon"></i>Laptop<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <!-- Mega Menu Content -->
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">ASUS</a>
+                                <a href="#">ACER</a>
+                                <a href="#">MSI</a>
+                                <a href="#">LENOVO</a>
+                                <a href="#">LG - Gram</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Giá bán</h5>
+                                <a href="#">Dưới 15 triệu</a>
+                                <a href="#">Từ 15 đến 20 triệu</a>
+                                <a href="#">Trên 20 triệu</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>CPU Intel - AMD</h5>
+                                <a href="#">Intel Core i3</a>
+                                <a href="#">Intel Core i5</a>
+                                <a href="#">Intel Core i7</a>
+                                <a href="#">AMD Ryzen</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Nhu cầu sử dụng</h5>
+                                <a href="#">Đồ họa - Studio</a>
+                                <a href="#">Học sinh - Sinh viên</a>
+                                <a href="#">Mỏng nhẹ cao cấp</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Linh phụ kiện Laptop</h5>
+                                <a href="#">Ram laptop</a>
+                                <a href="#">SSD laptop</a>
+                                <a href="#">Ổ cứng di động</a>
+                            </div>
+                        </div>
+                        <div class="mega-bottom-grid">
+                            <div class="mega-bottom-col">
+                                <h6>Laptop ASUS</h6>
+                                <a href="#">ASUS OLED Series</a>
+                                <a href="#">Vivobook Series</a>
+                                <a href="#">Zenbook Series</a>
+                            </div>
+                            <div class="mega-bottom-col">
+                                <h6>Laptop ACER</h6>
+                                <a href="#">Aspire Series</a>
+                                <a href="#">Swift Series</a>
+                            </div>
+                            <div class="mega-bottom-col">
+                                <h6>Laptop MSI</h6>
+                                <a href="#">Modern Series</a>
+                                <a href="#">Prestige Series</a>
+                            </div>
+                            <div class="mega-bottom-col">
+                                <h6>Laptop Lenovo</h6>
+                                <a href="#">Thinkbook Series</a>
+                                <a href="#">Ideapad Series</a>
+                                <a href="#">Thinkpad Series</a>
+                                <a href="#">Yoga Series</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Laptop Gaming with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="gamepad-2" class="cat-icon"></i>Laptop Gaming<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <!-- Mega Menu Content -->
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Phân Khúc Hot</h5>
+                                <a href="#">ASUS ROG Strix</a>
+                                <a href="#">ASUS TUF Gaming</a>
+                                <a href="#">Acer Predator Helios</a>
+                                <a href="#">Acer Nitro V</a>
+                                <a href="#">Lenovo Legion</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">ASUS ROG / TUF</a>
+                                <a href="#">ACER Predator / Nitro</a>
+                                <a href="#">MSI Gaming</a>
+                                <a href="#">LENOVO Legion / LOQ</a>
+                                <a href="#">GIGABYTE Gaming</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Card đồ họa (VGA)</h5>
+                                <a href="#">NVIDIA RTX 4050</a>
+                                <a href="#">NVIDIA RTX 4060</a>
+                                <a href="#">NVIDIA RTX 4070</a>
+                                <a href="#">NVIDIA RTX 4080 / 4090</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Giá bán</h5>
+                                <a href="#">Dưới 20 triệu</a>
+                                <a href="#">Từ 20 đến 30 triệu</a>
+                                <a href="#">Từ 30 đến 40 triệu</a>
+                                <a href="#">Trên 40 triệu</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Màn hình Gaming</h5>
+                                <a href="#">144Hz FHD</a>
+                                <a href="#">165Hz QHD</a>
+                                <a href="#">240Hz+ OLED</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- PC GVN with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="monitor" class="cat-icon"></i>PC GVN<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Cấu hình Hot</h5>
+                                <a href="#">PC GVN VIP</a>
+                                <a href="#">PC GVN Creator</a>
+                                <a href="#">PC GVN Student</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Theo CPU</h5>
+                                <a href="#">PC Core i3</a>
+                                <a href="#">PC Core i5</a>
+                                <a href="#">PC Core i7</a>
+                                <a href="#">PC Ryzen 5</a>
+                                <a href="#">PC Ryzen 7</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Mức giá</h5>
+                                <a href="#">Dưới 15 triệu</a>
+                                <a href="#">Từ 15 - 25 triệu</a>
+                                <a href="#">Trên 25 triệu</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Nhu cầu</h5>
+                                <a href="#">PC Gaming</a>
+                                <a href="#">PC Văn Phòng</a>
+                                <a href="#">PC Đồ Họa</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Main, CPU, VGA with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="cpu" class="cat-icon"></i>Main, CPU, VGA<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Mainboard</h5>
+                                <a href="#">Intel Z790 / B760</a>
+                                <a href="#">AMD X670 / B650</a>
+                                <a href="#">Hãng ASUS / MSI</a>
+                                <a href="#">Hãng Gigabyte</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>CPU (Vi xử lý)</h5>
+                                <a href="#">Intel Core Ultra</a>
+                                <a href="#">Intel Core Gen 14</a>
+                                <a href="#">AMD Ryzen 9000</a>
+                                <a href="#">AMD Ryzen 7000</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>VGA (Card đồ họa)</h5>
+                                <a href="#">GeForce RTX 4060</a>
+                                <a href="#">GeForce RTX 4070</a>
+                                <a href="#">GeForce RTX 4080</a>
+                                <a href="#">Radeon RX 7000</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Case, Nguồn, Tản with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="hard-drive" class="cat-icon"></i>Case, Nguồn, Tản<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Vỏ máy tính</h5>
+                                <a href="#">Case Corsair</a>
+                                <a href="#">Case Lian Li</a>
+                                <a href="#">Case NZXT</a>
+                                <a href="#">Case Bể cá cảnh</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Nguồn máy tính</h5>
+                                <a href="#">Nguồn 650W</a>
+                                <a href="#">Nguồn 750W</a>
+                                <a href="#">Nguồn 850W+</a>
+                                <a href="#">Chuẩn 80 Plus Gold</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Tản nhiệt CPU</h5>
+                                <a href="#">Tản nước AIO</a>
+                                <a href="#">Tản khí Tower</a>
+                                <a href="#">Quạt Case RGB</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Ổ cứng, RAM, Thẻ nhớ with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="database" class="cat-icon"></i>Ổ cứng, RAM, Thẻ nhớ<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>RAM máy tính</h5>
+                                <a href="#">RAM DDR4</a>
+                                <a href="#">RAM DDR5</a>
+                                <a href="#">RAM Corsair</a>
+                                <a href="#">RAM Kingston</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Ổ cứng SSD</h5>
+                                <a href="#">SSD M.2 NVMe</a>
+                                <a href="#">SSD SATA III</a>
+                                <a href="#">Samsung</a>
+                                <a href="#">Kingston / WD</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>HDD & Di động</h5>
+                                <a href="#">HDD WD Blue</a>
+                                <a href="#">HDD Seagate</a>
+                                <a href="#">Ổ cứng di động</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Loa, Micro, Webcam with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="volume-2" class="cat-icon"></i>Loa, Micro, Webcam<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Âm thanh</h5>
+                                <a href="#">Loa 2.1 Gaming</a>
+                                <a href="#">Loa Soundbar</a>
+                                <a href="#">Tai nghe PC</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Streamer</h5>
+                                <a href="#">Microphone USB</a>
+                                <a href="#">Webcam Full HD</a>
+                                <a href="#">Webcam 4K</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Màn hình with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="tv" class="cat-icon"></i>Màn hình<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Loại màn hình</h5>
+                                <a href="#">Màn hình Gaming</a>
+                                <a href="#">Màn hình đồ họa</a>
+                                <a href="#">Màn hình văn phòng</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Kích thước</h5>
+                                <a href="#">24 inch</a>
+                                <a href="#">27 inch</a>
+                                <a href="#">32 inch+</a>
+                                <a href="#">Màn hình cong</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">ASUS TUF</a>
+                                <a href="#">Dell UltraSharp</a>
+                                <a href="#">LG UltraGear</a>
+                                <a href="#">Samsung Odyssey</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Bàn phím with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="keyboard" class="cat-icon"></i>Bàn phím<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Loại phím</h5>
+                                <a href="#">Bàn phím cơ</a>
+                                <a href="#">Bàn phím giả cơ</a>
+                                <a href="#">Bàn phím Bluetooth</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">Bàn phím AKKO</a>
+                                <a href="#">Bàn phím Corsair</a>
+                                <a href="#">Bàn phím Leopold</a>
+                                <a href="#">Bàn phím Logitech</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Chuột + Lót chuột with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="mouse" class="cat-icon"></i>Chuột + Lót chuột<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Loại chuột</h5>
+                                <a href="#">Chuột Gaming</a>
+                                <a href="#">Chuột không dây</a>
+                                <a href="#">Chuột công thái học</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">Logitech G</a>
+                                <a href="#">Razer</a>
+                                <a href="#">SteelSeries</a>
+                                <a href="#">Corsair</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Lót chuột</h5>
+                                <a href="#">Lót chuột cỡ lớn</a>
+                                <a href="#">Lót chuột RGB</a>
+                                <a href="#">Lót chuột Control</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Tai nghe with Mega Menu -->
+                <li class="category-item">
+                    <a href="#"><i data-lucide="headphones" class="cat-icon"></i>Tai nghe<i data-lucide="chevron-right" class="cat-arrow" style="width: 10px; height: 10px; stroke-width: 3;"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-grid">
+                            <div class="mega-col">
+                                <h5>Loại tai nghe</h5>
+                                <a href="#">Tai nghe Over-ear</a>
+                                <a href="#">Tai nghe In-ear</a>
+                                <a href="#">Tai nghe không dây</a>
+                            </div>
+                            <div class="mega-col">
+                                <h5>Thương hiệu</h5>
+                                <a href="#">HyperX Cloud</a>
+                                <a href="#">Razer Kraken</a>
+                                <a href="#">Logitech G</a>
+                                <a href="#">Corsair Void</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
             </ul>
         </aside>
 
-        <!-- Right Content Section -->
-        <main class="content-container">
-            
-            <div class="breadcrumb">
-                <a href="/">Trang chủ</a> &gt; <a href="#">Laptop</a> &gt; <span id="breadcrumbCurrent">Đang tải...</span>
+        <!-- Center Slider -->
+        <section class="main-slider">
+            <div class="slider-image-box">
+                <div class="slider-content">
+                    <span class="slider-tag">HOT DEAL HÈ 2026</span>
+                    <h2 class="slider-title">GEARSTORE BACK TO SCHOOL</h2>
+                    <p class="slider-desc">Ưu đãi cực khủng: Laptop Gaming giảm đến 35%, trả góp 0% lãi suất.</p>
+                </div>
             </div>
+            <div class="slider-tabs">
+                <div class="slider-tab-item active">Laptop Gaming</div>
+                <div class="slider-tab-item">PC GearStore</div>
+                <div class="slider-tab-item">Màn Hình Xịn</div>
+                <div class="slider-tab-item">Linh Kiện Máy Tính</div>
+            </div>
+        </section>
 
-            <!-- Main Product Detail Card -->
-            <div class="product-detail-card" id="productContainer">
+        <!-- Right Side Banners -->
+        <div class="side-banners">
+            <a href="#" class="side-banner-item">
+                <span class="banner-icon">💻</span>
+                <span class="banner-txt-title">Build PC Nhận Quà</span>
+                <span class="banner-txt-desc">Tặng tản nhiệt nước AIO trị giá 1.5 triệu đồng.</span>
+            </a>
+            <a href="#" class="side-banner-item" style="border-color: #fca5a5; background-color: #fff8f8;">
+                <span class="banner-icon" style="color: var(--primary-red);">🔥</span>
+                <span class="banner-txt-title" style="color: var(--primary-red);">Thu Cũ Đổi Mới</span>
+                <span class="banner-txt-desc">Trợ giá lên đời laptop & linh kiện đến 2 triệu.</span>
+            </a>
+            <a href="#" class="side-banner-item">
+                <span class="banner-icon">💳</span>
+                <span class="banner-txt-title">Trả Góp 0% Lãi Suất</span>
+                <span class="banner-txt-desc">Duyệt hồ sơ nhanh chóng qua thẻ tín dụng trong 5 phút.</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- --- PRODUCTS SECTION --- -->
+    <div class="products-section-container">
+        <div class="section-header" style="flex-wrap: wrap; gap: 1rem; align-items: center;">
+            <h2 class="section-title">Sản phẩm nổi bật</h2>
+            <!-- Active Filter Badge -->
+            <div id="filterBadgeContainer" style="display: none; align-items: center; gap: 0.5rem; background-color: #fee2e2; border: 1px solid #fca5a5; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: var(--primary-red);">
+                <span>Bộ lọc: <strong id="activeFilterLabel">---</strong></span>
+                <button onclick="clearFilter()" style="background: var(--primary-red); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7rem; font-weight: bold; line-height: 1; margin-left: 0.25rem;">×</button>
+            </div>
+        </div>
+        
+        <!-- Grid Products -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Skeleton items while loading -->
+            <div class="product-card skeleton" style="height: 280px;"></div>
+            <div class="product-card skeleton" style="height: 280px;"></div>
+            <div class="product-card skeleton" style="height: 280px;"></div>
+            <div class="product-card skeleton" style="height: 280px;"></div>
+            <div class="product-card skeleton" style="height: 280px;"></div>
+        </div>
+    </div>
+
+    <!-- --- INTRO SECTION --- -->
+    <div class="intro-container">
+        <section class="intro-card">
+            <h2 class="intro-title">GearStore - Chuỗi cửa hàng công nghệ uy tín hàng đầu</h2>
+            <p class="intro-desc">
+                Chào mừng bạn đến với <strong>GearStore</strong>, nơi cung cấp các giải pháp công nghệ toàn diện cho khách hàng cá nhân và doanh nghiệp. Lấy cảm hứng từ sự tiện lợi và đa dạng của CellphoneS, GearStore mang đến hàng ngàn mã hàng từ <strong>laptop gaming cao cấp</strong>, <strong>máy tính lắp ráp (PC custom)</strong>, màn hình máy tính chất lượng cao cho tới các phụ kiện chuột bàn phím cơ độc đáo. Chúng tôi tự hào mang đến sản phẩm 100% chính hãng, chế độ bảo hành chuyên nghiệp cùng các chính sách trợ giá hấp dẫn hàng đầu.
+            </p>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">Giao Hàng Siêu Tốc 2h</div>
+                    <div class="feature-desc">Nhận hàng cực nhanh, kiểm tra thoải mái tại nhà</div>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-icon">🛡️</span>
+                    <div class="feature-title">Bảo Hành Chính Hãng</div>
+                    <div class="feature-desc">Yên tâm sử dụng với chính sách bảo hành toàn quốc</div>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-icon">💳</span>
+                    <div class="feature-title">Trả Góp 0% Dễ Dàng</div>
+                    <div class="feature-desc">Hỗ trợ trả góp qua hơn 20 ngân hàng đối tác</div>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-icon">🔧</span>
+                    <div class="feature-title">Kỹ Thuật Chuyên Sâu</div>
+                    <div class="feature-desc">Đội ngũ lắp ráp và sửa chữa dày dặn kinh nghiệm</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- --- LOGIN MODAL POPUP --- -->
+    <div class="modal-overlay" id="loginModal" onclick="closeLoginModal(event)">
+        <div class="modal-card" style="max-width: 400px; border-radius: 12px; overflow: hidden;" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeLoginModal(null)">×</button>
+            <div style="padding: 2.25rem 2rem;">
+                <div style="text-align: center; margin-bottom: 1.75rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 850; color: var(--primary-red); letter-spacing: -0.5px;">ĐĂNG NHẬP GEARSTORE</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Chào mừng bạn quay trở lại với chúng tôi!</p>
+                </div>
                 
-                <!-- Left: Product Image -->
-                <div class="product-gallery">
-                    <div class="main-image-wrapper">
-                        <span class="aws-badge">AWS S3</span>
-                        <!-- Loading placeholder -->
-                        <div class="skeleton" style="width: 100%; height: 100%; position: absolute; top:0; left:0; border-radius: 6px;" id="imgSkeleton"></div>
-                        <img id="productImage" class="product-main-img" style="display: none;" alt="Ảnh sản phẩm">
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                        <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Tài khoản hoặc Email</label>
+                        <input type="text" id="loginUsername" required placeholder="Nhập email hoặc tên đăng nhập" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                        <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Mật khẩu</label>
+                        <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu của bạn" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; margin-top: 0.15rem;">
+                        <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer; color: #4b5563; font-weight: 600;">
+                            <input type="checkbox"> Ghi nhớ tôi
+                        </label>
+                        <a href="#" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Quên mật khẩu?</a>
+                    </div>
+                    
+                    <button type="submit" style="background-color: var(--primary-red); color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; transition: background-color 0.2s;">
+                        ĐĂNG NHẬP
+                    </button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 1.25rem; padding-top: 1rem;">
+                    <!-- Divider -->
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem;">
+                        <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); white-space: nowrap;">hoặc đăng nhập với</span>
+                        <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                    </div>
+
+                    <!-- Google Sign-In Button (rendered by GSI library) -->
+                    <div id="google-btn-container" style="display: flex; justify-content: center; min-height: 44px;"></div>
+
+                    <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.85rem;">
+                        Chưa có tài khoản? <a href="#" onclick="switchModalToRegister(event)" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Đăng ký ngay</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- REGISTER MODAL POPUP --- -->
+    <div class="modal-overlay" id="registerModal" onclick="closeRegisterModal(event)">
+        <div class="modal-card" style="max-width: 400px; border-radius: 12px; overflow: hidden;" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeRegisterModal(null)">×</button>
+            <div style="padding: 2.25rem 2rem;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 850; color: var(--primary-red); letter-spacing: -0.5px;">ĐĂNG KÝ GEARSTORE</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Tạo tài khoản mới cực kỳ nhanh chóng!</p>
+                </div>
+                
+                <form id="registerForm" onsubmit="handleRegisterSubmit(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: #4b5563;">Tên đăng nhập</label>
+                        <input type="text" id="regUsername" required placeholder="Nhập tên đăng nhập" class="form-input" style="padding: 0.55rem 0.75rem;">
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: #4b5563;">Họ và Tên</label>
+                        <input type="text" id="regFullName" required placeholder="Nhập họ và tên của bạn" class="form-input" style="padding: 0.55rem 0.75rem;">
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: #4b5563;">Địa chỉ Email</label>
+                        <input type="email" id="regEmail" required placeholder="Nhập email liên hệ" class="form-input" style="padding: 0.55rem 0.75rem;">
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: #4b5563;">Mật khẩu</label>
+                        <input type="password" id="regPassword" required placeholder="Nhập mật khẩu" class="form-input" style="padding: 0.55rem 0.75rem;">
+                    </div>
+                    
+                    <button type="submit" style="background-color: var(--primary-red); color: white; border: none; padding: 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; margin-top: 0.5rem; transition: background-color 0.2s;">
+                        ĐĂNG KÝ
+                    </button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 1.25rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">
+                        Đã có tài khoản? <a href="#" onclick="switchModalToLogin(event)" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Đăng nhập ngay</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- DETAIL MODAL POPUP --- -->
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeModal(null)">×</button>
+            <div class="modal-body">
+                <!-- Left Gallery -->
+                <div class="modal-left">
+                    <div class="modal-img-wrapper">
+                        <span class="aws-badge" style="background-color: var(--primary-red);">AWS Certified</span>
+                        <img id="modalProductImage" class="modal-main-img" alt="Ảnh sản phẩm">
                     </div>
                 </div>
-
-                <!-- Right: Product Information -->
-                <div class="product-info-wrapper">
-                    <div class="product-meta-row">
-                        <span>Mã SP: <span class="meta-id" id="productId">---</span></span>
-                        <span>Tình trạng: <span style="color: var(--success); font-weight: 700;">Còn hàng</span></span>
+                <!-- Right Info -->
+                <div class="modal-right">
+                    <div class="modal-meta">
+                        <span>Mã sản phẩm: <span class="modal-id-tag" id="modalProductId">---</span></span>
+                        <span>Trạng thái: <span style="color: var(--success-green); font-weight: 700;">Còn hàng</span></span>
                     </div>
 
-                    <h1 class="product-title" id="productName">Đang tải thông tin sản phẩm...</h1>
+                    <h1 class="modal-title" id="modalProductName">Tên sản phẩm</h1>
 
                     <!-- Price Block -->
-                    <div class="price-section">
-                        <div class="price-row">
-                            <span class="price-current" id="productPrice">---</span>
-                            <span class="price-original" id="productPriceOriginal">---</span>
-                            <span class="price-discount" id="productDiscount">-2%</span>
-                        </div>
+                    <div class="modal-price-box">
+                        <span class="modal-price-current" id="modalProductPrice">---</span>
+                        <span class="modal-price-original" id="modalProductPriceOriginal">---</span>
                     </div>
 
-                    <!-- Promotions Box -->
-                    <div class="promo-box">
-                        <div class="promo-title">🎁 KHUYẾN MÃI ĐẶC BIỆT</div>
-                        <ul class="promo-list">
-                            <li>Giảm trực tiếp thêm 500.000đ khi thanh toán qua VNPay-QR.</li>
-                            <li>Tặng Balo GearVN cao cấp trị giá 350.000đ.</li>
-                            <li>Tặng chuột Gaming Asus TUF M3 trị giá 450.000đ.</li>
-                            <li>Miễn phí giao hàng toàn quốc và hỗ trợ lắp đặt tại nhà.</li>
+                    <!-- Promos Box -->
+                    <div class="modal-promos">
+                        <div class="modal-promo-title">🎁 Khuyến mãi đi kèm sản phẩm</div>
+                        <ul class="modal-promo-list">
+                            <li>Tặng thêm 1 năm bảo hành mở rộng chính hãng GearStore.</li>
+                            <li>Tặng Voucher mua linh kiện nâng cấp Ram/SSD trị giá 300.000đ.</li>
+                            <li>Giảm ngay 10% khi mua kèm Balo chống sốc chống nước cao cấp.</li>
                         </ul>
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="purchase-actions">
-                        <button class="btn-buy-now" onclick="alert('Đã thêm sản phẩm vào giỏ hàng!')">
+                    <div class="modal-actions">
+                        <button class="modal-btn-buy" onclick="alert('Sản phẩm đã được thêm vào giỏ hàng thành công!')">
                             <span>MUA NGAY</span>
-                            <span>Giao hàng tận nơi nhanh chóng</span>
+                            <span>Giao hàng miễn phí tận nơi</span>
                         </button>
-                        <button class="btn-installment" onclick="alert('Liên hệ hotline để được hỗ trợ mua trả góp 0%!')">
+                        <button class="modal-btn-install" onclick="alert('Đã tiếp nhận yêu cầu, đội ngũ hỗ trợ sẽ gọi lại tư vấn trả góp cho bạn!')">
                             <span>TRẢ GÓP 0%</span>
-                            <span>Duyệt hồ sơ nhanh qua thẻ tín dụng</span>
+                            <span>Thủ tục duyệt nhanh qua Credit Card</span>
                         </button>
                     </div>
 
-                    <!-- Specifications Table -->
-                    <div class="specs-section">
-                        <h3 class="specs-title">📋 Thông số kỹ thuật chi tiết</h3>
-                        <table class="specs-table">
-                            <tbody id="specsTableBody">
-                                <!-- Skeletons -->
-                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 80%;"></div></td></tr>
-                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 60%;"></div></td></tr>
-                                <tr><td>---</td><td><div class="skeleton" style="height: 15px; width: 70%;"></div></td></tr>
+                    <!-- Specs Table -->
+                    <div>
+                        <h3 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Cấu hình sản phẩm</h3>
+                        <table class="modal-specs-table">
+                            <tbody id="modalSpecsTableBody">
+                                <!-- Specs list dynamic -->
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
-
-            <!-- Error State Card -->
-            <div class="error-card" id="errorContainer">
-                <div class="error-message">❌ KHÔNG TÌM THẤY SẢN PHẨM</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng kiểm tra lại mã ID sản phẩm hoặc kết nối mạng của bạn.</p>
-                <button class="btn-retry" onclick="loadProduct()">Thử lại</button>
-            </div>
-
-            <!-- --- INTRO SECTION --- -->
-            <section class="intro-card">
-                <h2 class="intro-title">GearStore - Hệ thống bán lẻ Laptop & PC Gaming uy tín</h2>
-                <p class="intro-desc">
-                    Chào mừng bạn đến với <strong>GearStore</strong>, điểm đến tin cậy hàng đầu dành cho cộng đồng game thủ và người yêu công nghệ tại Việt Nam. Chúng tôi chuyên cung cấp các dòng sản phẩm máy tính cao cấp, bao gồm <strong>laptop gaming</strong> thế hệ mới nhất, <strong>laptop văn phòng</strong> mỏng nhẹ hiệu năng cao, các hệ thống <strong>PC GVN độc quyền</strong> được lắp ráp tỉ mỉ, cùng các linh kiện phần cứng chính hãng chất lượng cao. Với sự tận tâm và phong cách làm việc chuyên nghiệp được kế thừa từ các mô hình hàng đầu như GearVN, GearStore cam kết mang đến dịch vụ tốt nhất và trải nghiệm mua sắm hoàn hảo nhất.
-                </p>
-                <div class="intro-features-grid">
-                    <div class="feature-box">
-                        <span class="feature-icon">⚡</span>
-                        <div class="feature-title">Giao Hàng Siêu Tốc</div>
-                        <div class="feature-desc">Nhận hàng trong vòng 2h tại khu vực nội thành</div>
-                    </div>
-                    <div class="feature-box">
-                        <span class="feature-icon">🛡️</span>
-                        <div class="feature-title">Bảo Hành Chính Hãng</div>
-                        <div class="feature-desc">Cam kết bảo hành 100% chính hãng tới 24 tháng</div>
-                    </div>
-                    <div class="feature-box">
-                        <span class="feature-icon">💳</span>
-                        <div class="feature-title">Trả Góp 0% Lãi Suất</div>
-                        <div class="feature-desc">Thủ tục nhanh chóng qua thẻ tín dụng</div>
-                    </div>
-                    <div class="feature-box">
-                        <span class="feature-icon">🔧</span>
-                        <div class="feature-title">Hỗ Trợ Kỹ Thuật</div>
-                        <div class="feature-desc">Lắp đặt và cài đặt phần mềm tận nơi miễn phí</div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+        </div>
     </div>
 
-    <!-- --- FOOTER DESIGN --- -->
+    <!-- --- CELLPHONES STYLE FOOTER --- -->
     <footer>
         <div class="footer-top">
             <div class="footer-column">
-                <h4>Về GearStore</h4>
-                <p style="margin-top: 0.5rem;">Hệ thống cửa hàng Hi-end PC & Gaming Gear chuyên nghiệp hàng đầu.</p>
-                <div class="contact-info">
-                    <div class="contact-item">📍 <strong>Showroom:</strong> 78-80 Hoàng Hoa Thám, P.12, Q.Tân Bình, TP.HCM</div>
-                    <div class="contact-item">📞 <strong>Hotline:</strong> 1900 5301</div>
-                    <div class="contact-item">✉️ <strong>Email:</strong> cskh@gearstore.vn</div>
+                <h4>Tổng đài hỗ trợ</h4>
+                <div class="phone-call-box">
+                    Gọi mua hàng: <a href="tel:19005301" class="phone-number">1900.5301</a>
+                </div>
+                <div class="phone-call-box">
+                    Khiếu nại, dịch vụ: <a href="tel:18002063" class="phone-number">1800.2063</a>
+                </div>
+                <div class="phone-call-box">
+                    Hỗ trợ kỹ thuật: <a href="tel:18002064" class="phone-number">1800.2064</a>
                 </div>
             </div>
             
             <div class="footer-column">
-                <h4>Chính sách bán hàng</h4>
+                <h4>Thông tin về GearStore</h4>
                 <ul>
-                    <li><a href="#">Chính sách bảo hành tại hãng</a></li>
-                    <li><a href="#">Chính sách đổi trả sản phẩm 1-1</a></li>
-                    <li><a href="#">Chính sách giao hàng và lắp đặt</a></li>
-                    <li><a href="#">Chính sách bảo mật thông tin cá nhân</a></li>
+                    <li><a href="#">Giới thiệu cửa hàng GearStore</a></li>
+                    <li><a href="#">Địa chỉ: 78 Nguyễn Thị Minh Khai, Q.3, TP. Hồ Chí Minh</a></li>
+                    <li><a href="#">Chính sách bảo hành tại cửa hàng</a></li>
+                    <li><a href="#">Tuyển dụng nhân viên kỹ thuật</a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
                 <h4>Hỗ trợ khách hàng</h4>
                 <ul>
-                    <li><a href="#">Hướng dẫn mua hàng trực tuyến</a></li>
-                    <li><a href="#">Phương thức thanh toán qua VNPay</a></li>
-                    <li><a href="#">Hướng dẫn mua trả góp online</a></li>
-                    <li><a href="#">Gửi yêu cầu hỗ trợ kỹ thuật</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng và đặt cọc</a></li>
+                    <li><a href="#">Phương thức giao hàng tận nhà</a></li>
+                    <li><a href="#">Chính sách đổi trả hàng 1-1</a></li>
+                    <li><a href="#">Tra cứu hóa đơn điện tử VAT</a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
                 <h4>Kết nối với chúng tôi</h4>
-                <p>Theo dõi các kênh truyền thông của GearStore để nhận ưu đãi mới nhất.</p>
-                <div class="social-icons">
-                    <a href="#" class="social-btn">F</a>
-                    <a href="#" class="social-btn">Y</a>
-                    <a href="#" class="social-btn">Z</a>
+                <div class="footer-socials">
+                    <a href="#" class="social-link">F</a>
+                    <a href="#" class="social-link">Y</a>
+                    <a href="#" class="social-link">T</a>
+                    <a href="#" class="social-link">Z</a>
                 </div>
-                <div class="payment-methods">
-                    <span class="payment-badge">Visa</span>
-                    <span class="payment-badge">Master</span>
-                    <span class="payment-badge">VNPay</span>
-                    <span class="payment-badge">JCB</span>
+                <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Đối tác thanh toán</h4>
+                <div class="payment-badges">
+                    <span class="payment-badge-img">Visa</span>
+                    <span class="payment-badge-img">Master</span>
+                    <span class="payment-badge-img">VNPay</span>
+                    <span class="payment-badge-img">Apple Pay</span>
                 </div>
             </div>
         </div>
@@ -1097,115 +2016,685 @@
         <div class="footer-bottom">
             <div class="footer-bottom-container">
                 <div>
-                    Copyright © 2026 GearStore. All Rights Reserved. Bản quyền thuộc về GearStore.
+                    Copyright © 2026 GearStore. All Rights Reserved. Hệ thống phân phối máy tính ủy quyền chính thức tại Việt Nam.
                 </div>
-                <div class="bct-badge">
-                    ✓ Đã đăng ký Bộ Công Thương
+                <div class="cert-badge">
+                    ✓ ĐÃ ĐĂNG KÝ BỘ CÔNG THƯƠNG
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+        let allProducts = [];
 
         function formatVND(value) {
             if (!value) return 'Liên hệ';
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
         }
 
-        async function loadProduct(productId) {
-            const id = productId || getQueryParam('id') || 'LAP001';
-            document.getElementById('productIdInput').value = id;
+        let activeFilter = null;
 
-            // UI loading state
-            document.getElementById('productContainer').style.display = 'grid';
-            document.getElementById('errorContainer').style.display = 'none';
-            document.getElementById('productImage').style.display = 'none';
-            document.getElementById('imgSkeleton').style.display = 'block';
+        // Bỏ qua các thẻ a có thuộc tính href="#" và gắn sự kiện lọc
+        function setupMegaMenuFilters() {
+            const menuLinks = document.querySelectorAll('.mega-menu a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Lấy danh mục chính từ nút cha của .mega-menu
+                    const categoryItem = this.closest('.category-item');
+                    const mainCategoryLink = categoryItem.querySelector('a');
+                    // Loại bỏ emoji và mũi tên
+                    const mainCategoryName = mainCategoryLink.textContent.replace(/[^\p{L}\p{N}\s,]/gu, '').trim();
+                    
+                    const filterText = this.textContent.trim();
+                    applyFilter(mainCategoryName, filterText);
 
-            try {
-                const response = await fetch(`/products/${id}`);
-                if (!response.ok) throw new Error('Product not found');
-                const data = await response.json();
+                });
+            });
+        }
 
-                // Bind details
-                document.getElementById('productId').textContent = data.productId;
-                document.getElementById('productName').textContent = data.name;
-                document.getElementById('breadcrumbCurrent').textContent = data.name;
-                
-                // Formatted price tags
-                const currentPrice = data.price;
-                document.getElementById('productPrice').textContent = formatVND(currentPrice);
-                
-                // Estimate original price for aesthetics (e.g. +2% to cross out)
-                if (currentPrice) {
-                    const originalPrice = Math.round((currentPrice * 1.02) / 10000) * 10000;
-                    document.getElementById('productPriceOriginal').textContent = formatVND(originalPrice);
-                } else {
-                    document.getElementById('productPriceOriginal').textContent = '';
-                }
+        // Tạo điểm nhấn nhấp nháy phát sáng cho cột danh mục ở body
+        function highlightCategories() {
+            const sidebar = document.querySelector('.sidebar-categories');
+            sidebar.classList.remove('highlight-glow');
+            void sidebar.offsetWidth; // Trigger reflow to restart CSS animation
+            sidebar.classList.add('highlight-glow');
+            
+            // Tự động cuộn mượt mà đưa bảng danh mục vào tầm mắt
+            sidebar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
 
-                // Handle Image
-                const img = document.getElementById('productImage');
-                const skeleton = document.getElementById('imgSkeleton');
-                if (data.imageUrl) {
-                    img.src = data.imageUrl;
-                    img.onload = () => {
-                        skeleton.style.display = 'none';
-                        img.style.display = 'block';
-                    };
-                } else {
-                    img.src = 'https://placehold.co/500x500/f3f4f6/333333?text=No+Image';
-                    img.onload = () => {
-                        skeleton.style.display = 'none';
-                        img.style.display = 'block';
-                    };
-                }
+        // Đóng/mở Popup Đăng nhập
+        // openLoginModal được định nghĩa bên dưới (kết hợp với Google GSI render)
 
-                // Render Specs Table
-                const tableBody = document.getElementById('specsTableBody');
-                tableBody.innerHTML = '';
-
-                if (data.attributes && Object.keys(data.attributes).length > 0) {
-                    Object.entries(data.attributes).forEach(([key, val]) => {
-                        const tr = document.createElement('tr');
-                        
-                        const tdLabel = document.createElement('td');
-                        tdLabel.textContent = key;
-                        
-                        const tdVal = document.createElement('td');
-                        tdVal.textContent = val;
-                        
-                        tr.appendChild(tdLabel);
-                        tr.appendChild(tdVal);
-                        tableBody.appendChild(tr);
-                    });
-                } else {
-                    tableBody.innerHTML = '<tr><td colspan="2" style="color: var(--text-muted); text-align: center;">Chưa có thông số cấu hình cụ thể</td></tr>';
-                }
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('productContainer').style.display = 'none';
-                document.getElementById('errorContainer').style.display = 'flex';
+        function closeLoginModal(event) {
+            if (!event || event.target === document.getElementById('loginModal')) {
+                document.getElementById('loginModal').style.display = 'none';
+                document.body.style.overflow = ''; // Cho phép cuộn lại trang chủ
             }
         }
 
-        function searchProduct() {
-            const inputVal = document.getElementById('productIdInput').value.trim();
-            if (inputVal) {
-                const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${inputVal}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-                loadProduct(inputVal);
+        // Đóng/mở Popup Đăng ký
+        function openRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Khóa cuộn trang chủ
+        }
+
+        function closeRegisterModal(event) {
+            if (!event || event.target === document.getElementById('registerModal')) {
+                document.getElementById('registerModal').style.display = 'none';
+                document.body.style.overflow = ''; // Cho phép cuộn lại trang chủ
             }
+        }
+
+        function switchModalToRegister(event) {
+            if (event) event.preventDefault();
+            closeLoginModal();
+            openRegisterModal();
+        }
+
+        function switchModalToLogin(event) {
+            if (event) event.preventDefault();
+            closeRegisterModal();
+            openLoginModal();
+        }
+
+        // === GOOGLE SIGN-IN (Google Identity Services) ===
+        const GOOGLE_CLIENT_ID = '438601701655-crdppnpl89amnpdd30b7nd8nrulpif0c.apps.googleusercontent.com';
+
+        // Khởi tạo GSI và render nút khi thư viện đã tải xong
+        function initGoogleSignIn() {
+            if (typeof google === 'undefined' || !google.accounts) {
+                // GSI chưa load xong → thử lại sau 300ms
+                setTimeout(initGoogleSignIn, 300);
+                return;
+            }
+
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: onGoogleCredentialReceived,
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+
+            // Render nút chính thức của Google vào container trong modal
+            const container = document.getElementById('google-btn-container');
+            if (container) {
+                google.accounts.id.renderButton(container, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 340
+                });
+            }
+        }
+
+        // Callback khi Google trả về JWT credential
+        function onGoogleCredentialReceived(response) {
+            try {
+                // Decode JWT payload từ Google (phần giữa dấu chấm)
+                const base64Url = response.credential.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                // Decode UTF-8 đúng cách (hỗ trợ tiếng Việt và ký tự Unicode)
+                const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+                const payload = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+
+                googleLoginSuccess({
+                    username: 'google_' + payload.sub,
+                    fullName: payload.name,
+                    email: payload.email,
+                    avatar: payload.picture
+                });
+            } catch (e) {
+                alert('❌ Không thể đọc thông tin từ Google. Vui lòng thử lại.');
+            }
+        }
+
+        // Xử lý sau khi Google đăng nhập thành công
+        async function googleLoginSuccess(userInfo) {
+            try {
+                // Tạo/cập nhật tài khoản trên DynamoDB
+                await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: userInfo.username,
+                        fullName: userInfo.fullName,
+                        email: userInfo.email,
+                        password: 'google_oauth_' + userInfo.username
+                    })
+                }).catch(() => {}); // Bỏ qua nếu đã tồn tại
+
+                const user = { ...userInfo, role: 'USER' };
+                localStorage.setItem('user', JSON.stringify(user));
+                closeLoginModal();
+                checkUserSession();
+            } catch (err) {
+                alert('Đăng nhập thất bại. Vui lòng thử lại.');
+            }
+        }
+
+        // Gọi init khi DOM sẵn sàng (GSI load async)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGoogleSignIn);
+        } else {
+            initGoogleSignIn();
+        }
+
+        // Re-render nút Google mỗi khi mở modal (đảm bảo nút hiện đúng)
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            // Render lại nút Google nếu GSI đã sẵn sàng
+            setTimeout(() => {
+                if (typeof google !== 'undefined' && google.accounts) {
+                    const container = document.getElementById('google-btn-container');
+                    if (container && container.children.length === 0) {
+                        google.accounts.id.renderButton(container, {
+                            type: 'standard',
+                            theme: 'outline',
+                            size: 'large',
+                            text: 'signin_with',
+                            shape: 'rectangular',
+                            logo_alignment: 'left',
+                            width: 340
+                        });
+                    }
+                }
+            }, 100);
+        }
+
+        // Gửi thông tin đăng nhập lên Backend
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    const errMsg = await response.text();
+                    throw new Error(errMsg);
+                }
+
+                const user = await response.json();
+                localStorage.setItem('user', JSON.stringify(user)); // Lưu session
+                
+                alert(`Đăng nhập thành công! Xin chào, ${user.fullName}`);
+                closeLoginModal();
+                checkUserSession(); // Cập nhật Header
+            } catch (error) {
+                alert(error.message || 'Đăng nhập thất bại. Hãy kiểm tra lại tài khoản.');
+            }
+        }
+
+        // Gửi thông tin đăng ký lên Backend
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const fullName = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, fullName, email, password })
+                });
+
+                if (!response.ok) {
+                    const errMsg = await response.text();
+                    throw new Error(errMsg);
+                }
+
+                alert('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
+                switchModalToLogin();
+            } catch (error) {
+                alert(error.message || 'Đăng ký thất bại. Hãy thử tài khoản khác.');
+            }
+        }
+
+        // Kiểm tra và hiển thị session người dùng
+        function checkUserSession() {
+            const userStr = localStorage.getItem('user');
+            const container = document.getElementById('userHeaderSection');
+            if (!container) return;
+
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                const initials = (user.fullName || 'U').charAt(0).toUpperCase();
+                
+                let adminLink = '';
+                if (user.role === 'ADMIN') {
+                    adminLink = `<a href="/admin.html" class="user-dropdown-item" style="color: var(--primary-red); font-weight: 700;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Trang Quản trị
+                    </a>
+                    <div style="height: 1px; background: #f3f4f6; margin: 0.25rem 0;"></div>`;
+                }
+
+                container.innerHTML = `
+                    <div class="user-menu-wrapper" id="userMenuWrapper">
+                        <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                            <div class="user-avatar-circle">${initials}</div>
+                            <div style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2;">
+                                <span style="font-size: 0.65rem; opacity: 0.85;">Xin chào,</span>
+                                <strong style="font-size: 0.8rem; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.fullName}</strong>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="dropdownArrow" style="transition: transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        
+                        <div class="user-dropdown-menu" id="userDropdownMenu" style="display: none;">
+                            <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-weight: 700; font-size: 0.875rem; color: #111827;">${user.fullName}</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.1rem;">${user.email || user.username}</div>
+                            </div>
+                            ${adminLink}
+                            <a href="#" class="user-dropdown-item" onclick="openUserProfile(event)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                Thông tin tài khoản
+                            </a>
+                            <a href="#" class="user-dropdown-item" onclick="openOrderHistory(event)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                Lịch sử mua hàng
+                            </a>
+                            <div style="height: 1px; background: #f3f4f6; margin: 0.25rem 0;"></div>
+                            <a href="#" class="user-dropdown-item" onclick="handleLogout(event)" style="color: #dc2626;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="header-btn" style="gap: 0.4rem; padding: 0.55rem 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.15);" onclick="openLoginModal()">
+                        <i data-lucide="user" style="width: 16px; height: 16px; stroke-width: 2.5;"></i> Đăng nhập
+                    </button>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
+            const btn = event.currentTarget;
+            const menu = document.getElementById('userDropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            const isOpen = menu.style.display === 'block';
+            
+            if (isOpen) {
+                menu.style.display = 'none';
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            } else {
+                // Tính vị trí dựa theo button (fixed positioning)
+                const rect = btn.getBoundingClientRect();
+                menu.style.top = (rect.bottom + 6) + 'px';
+                menu.style.right = (window.innerWidth - rect.right) + 'px';
+                menu.style.display = 'block';
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Đóng dropdown khi click ra ngoài
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('userDropdownMenu');
+            const wrapper = document.getElementById('userMenuWrapper');
+            if (menu && menu.style.display === 'block') {
+                if (!wrapper || !wrapper.contains(e.target)) {
+                    menu.style.display = 'none';
+                    const arrow = document.getElementById('dropdownArrow');
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+
+        // Ẩn dropdown khi scroll
+        window.addEventListener('scroll', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.style.display = 'none';
+        }, { passive: true });
+
+        function openUserProfile(event) {
+            if (event) event.preventDefault();
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+            const user = JSON.parse(userStr);
+            alert(`📋 Thông tin tài khoản:\n\nTên đăng nhập: ${user.username}\nHọ và Tên: ${user.fullName}\nEmail: ${user.email || 'Chưa cập nhật'}\nQuyền hạn: ${user.role === 'ADMIN' ? 'Quản trị viên' : 'Khách hàng'}`);
+        }
+
+        function openOrderHistory(event) {
+            if (event) event.preventDefault();
+            alert('📦 Lịch sử mua hàng\n\nChức năng đang được phát triển.\nBạn sẽ sớm có thể xem toàn bộ đơn hàng của mình tại đây!');
+        }
+
+        function handleLogout(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem('user');
+            window.location.reload();
+        }
+
+        // Kiểm tra xem sản phẩm có thuộc về danh mục chính được chọn không
+        function productBelongsToCategory(product, categoryName) {
+            const catLower = categoryName.toLowerCase();
+            const idLower = product.productId.toLowerCase();
+            const nameLower = product.name.toLowerCase();
+            
+            if (catLower.includes("laptop gaming") || catLower.includes("laptop")) {
+                if (catLower.includes("gaming")) {
+                    // Check specifically for gaming laptop terms
+                    return idLower.startsWith("lap") && (nameLower.includes("gaming") || nameLower.includes("strix") || nameLower.includes("tuf") || nameLower.includes("predator") || nameLower.includes("nitro"));
+                }
+                return idLower.startsWith("lap");
+            }
+            if (catLower.includes("pc gvn")) {
+                return idLower.startsWith("pc");
+            }
+            if (catLower.includes("main") || catLower.includes("cpu") || catLower.includes("vga")) {
+                return nameLower.includes("mainboard") || nameLower.includes("cpu") || nameLower.includes("vga") || nameLower.includes("geforce") || nameLower.includes("ryzen") || nameLower.includes("core i") || idLower.startsWith("pc") || idLower.startsWith("lap");
+            }
+            if (catLower.includes("màn hình")) {
+                return idLower.startsWith("mon") || nameLower.includes("màn hình");
+            }
+            if (catLower.includes("bàn phím")) {
+                return idLower.startsWith("kb") || nameLower.includes("bàn phím");
+            }
+            if (catLower.includes("chuột")) {
+                return idLower.startsWith("ms") || nameLower.includes("chuột");
+            }
+            if (catLower.includes("tai nghe")) {
+                return idLower.startsWith("ep") || nameLower.includes("tai nghe");
+            }
+            return true; // Fallback
+        }
+
+        function applyFilter(categoryName, filterText) {
+            activeFilter = { category: categoryName, text: filterText };
+            
+            // Show badge
+            document.getElementById('activeFilterLabel').textContent = `${categoryName} > ${filterText}`;
+            document.getElementById('filterBadgeContainer').style.display = 'inline-flex';
+            
+            // Filter products logic
+            const filtered = allProducts.filter(product => {
+                // 1. Phải thuộc về danh mục chính được chọn (Không được tổng hợp chung các loại khác)
+                if (!productBelongsToCategory(product, categoryName)) {
+                    return false;
+                }
+
+                const textLower = filterText.toLowerCase();
+                const nameLower = product.name.toLowerCase();
+                const priceVal = product.price || 0;
+                
+                // 2. So khớp điều kiện lọc cụ thể
+                // Check price ranges
+                if (textLower === "dưới 15 triệu" || textLower === "dưới 20 triệu") {
+                    const threshold = textLower.includes("15") ? 15000000 : 20000000;
+                    return priceVal < threshold;
+                }
+                if (textLower === "trên 20 triệu" || textLower === "trên 40 triệu") {
+                    const threshold = textLower.includes("20") ? 20000000 : 40000000;
+                    return priceVal > threshold;
+                }
+                if (textLower === "từ 15 đến 20 triệu") {
+                    return priceVal >= 15000000 && priceVal <= 20000000;
+                }
+                if (textLower === "từ 15 - 25 triệu") {
+                    return priceVal >= 15000000 && priceVal <= 25000000;
+                }
+                if (textLower === "từ 20 đến 30 triệu") {
+                    return priceVal >= 20000000 && priceVal <= 30000000;
+                }
+                if (textLower === "từ 30 đến 40 triệu") {
+                    return priceVal >= 30000000 && priceVal <= 40000000;
+                }
+                
+                // Check CPU keywords
+                if (textLower.includes("i3")) {
+                    return nameLower.includes("i3") || checkSpecValue(product, "i3");
+                }
+                if (textLower.includes("i5")) {
+                    return nameLower.includes("i5") || checkSpecValue(product, "i5");
+                }
+                if (textLower.includes("i7")) {
+                    return nameLower.includes("i7") || checkSpecValue(product, "i7");
+                }
+                if (textLower.includes("ryzen")) {
+                    return nameLower.includes("ryzen") || checkSpecValue(product, "ryzen");
+                }
+                if (textLower.includes("ultra")) {
+                    return nameLower.includes("ultra") || checkSpecValue(product, "ultra");
+                }
+
+                // Fallback generic text search across Name and Attributes
+                const matchInName = nameLower.includes(textLower);
+                const matchInSpecs = product.attributes && Object.values(product.attributes).some(val => 
+                    val.toLowerCase().includes(textLower)
+                );
+                
+                return matchInName || matchInSpecs;
+            });
+            
+            renderProducts(filtered);
+            
+            // Scroll down to products grid smoothly
+            document.querySelector('.products-section-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function checkSpecValue(product, keyword) {
+            if (!product.attributes) return false;
+            return Object.values(product.attributes).some(val => val.toLowerCase().includes(keyword.toLowerCase()));
+        }
+
+        function clearFilter() {
+            activeFilter = null;
+            document.getElementById('filterBadgeContainer').style.display = 'none';
+            renderProducts(allProducts);
+        }
+
+        // Fetch products on page load
+        async function fetchProducts() {
+            try {
+                const response = await fetch('/products');
+                if (!response.ok) throw new Error('Failed to load products');
+                allProducts = await response.json();
+                renderProducts(allProducts);
+                setupMegaMenuFilters(); // Kích hoạt bộ lắng nghe lọc
+                lucide.createIcons(); // Khởi tạo Lucide Icons style minimalism
+                
+                // Auto open modal if ?id= is set in query parameter
+                const autoOpenId = getQueryParam('id');
+                if (autoOpenId) {
+                    showProductDetail(autoOpenId);
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('productsGrid').innerHTML = '<div style="grid-column: span 5; text-align: center; color: var(--primary-red); font-weight: 700; padding: 2rem;">Lỗi khi kết nối đến server dữ liệu DynamoDB. Vui lòng tải lại trang.</div>';
+            }
+        }
+
+        function renderProducts(productsList) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            if (productsList.length === 0) {
+                grid.innerHTML = '<div style="grid-column: span 5; text-align: center; color: var(--text-muted); padding: 2rem;">Không tìm thấy sản phẩm nào phù hợp.</div>';
+                return;
+            }
+
+            productsList.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => {
+                    // Update URL search query without reloading
+                    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${product.productId}`;
+                    window.history.pushState({ path: newUrl }, '', newUrl);
+                    showProductDetail(product.productId);
+                };
+
+                // Badge discount
+                const badge = document.createElement('div');
+                badge.className = 'card-badge';
+                badge.textContent = 'Trả góp 0%';
+                card.appendChild(badge);
+
+                // Image container
+                const imgBox = document.createElement('div');
+                imgBox.className = 'card-img-box';
+                const img = document.createElement('img');
+                img.className = 'card-img';
+                img.src = product.imageUrl || 'https://placehold.co/200x200/f3f4f6/333333?text=No+Image';
+                img.alt = product.name;
+                imgBox.appendChild(img);
+                card.appendChild(imgBox);
+
+                // Title
+                const title = document.createElement('h3');
+                title.className = 'card-title';
+                title.textContent = product.name;
+                card.appendChild(title);
+
+                // Rating
+                const rating = document.createElement('div');
+                rating.className = 'card-rating';
+                rating.innerHTML = '★ ★ ★ ★ ★ <span style="color:#6b7280; font-size:0.65rem;">(5)</span>';
+                card.appendChild(rating);
+
+                // Price
+                const priceRow = document.createElement('div');
+                priceRow.className = 'card-price-row';
+                const currentPrice = document.createElement('span');
+                currentPrice.className = 'card-price-current';
+                currentPrice.textContent = formatVND(product.price);
+                priceRow.appendChild(currentPrice);
+
+                if (product.price) {
+                    const originalPrice = document.createElement('span');
+                    originalPrice.className = 'card-price-original';
+                    originalPrice.textContent = formatVND(Math.round((product.price * 1.05) / 50000) * 50000);
+                    priceRow.appendChild(originalPrice);
+                }
+                card.appendChild(priceRow);
+
+                // Specs list snippet
+                const specsRow = document.createElement('div');
+                specsRow.className = 'card-specs-row';
+                
+                if (product.attributes && Object.keys(product.attributes).length > 0) {
+                    // Extract up to 2 attributes (like CPU, VGA or RAM)
+                    let count = 0;
+                    Object.entries(product.attributes).forEach(([key, val]) => {
+                        if (count < 2 && (key.toLowerCase().includes('cpu') || key.toLowerCase().includes('vga') || key.toLowerCase().includes('ram') || key.toLowerCase().includes('kích thước'))) {
+                            const specTag = document.createElement('span');
+                            specTag.className = 'card-spec-tag';
+                            
+                            // Shorten text if needed
+                            let displayVal = val;
+                            if (val.length > 20) {
+                                displayVal = val.split('(')[0].substring(0, 18) + '...';
+                            }
+                            specTag.textContent = displayVal;
+                            specsRow.appendChild(specTag);
+                            count++;
+                        }
+                    });
+                }
+                card.appendChild(specsRow);
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Show detailed product modal
+        function showProductDetail(productId) {
+            const product = allProducts.find(p => p.productId === productId);
+            if (!product) return;
+
+            document.getElementById('modalProductId').textContent = product.productId;
+            document.getElementById('modalProductName').textContent = product.name;
+            document.getElementById('modalProductPrice').textContent = formatVND(product.price);
+            
+            if (product.price) {
+                document.getElementById('modalProductPriceOriginal').textContent = formatVND(Math.round((product.price * 1.05) / 50000) * 50000);
+            } else {
+                document.getElementById('modalProductPriceOriginal').textContent = '';
+            }
+
+            const img = document.getElementById('modalProductImage');
+            img.src = product.imageUrl || 'https://placehold.co/400x400/f3f4f6/333333?text=No+Image';
+
+            // Specs table render
+            const specsBody = document.getElementById('modalSpecsTableBody');
+            specsBody.innerHTML = '';
+
+            if (product.attributes && Object.keys(product.attributes).length > 0) {
+                Object.entries(product.attributes).forEach(([key, val]) => {
+                    const tr = document.createElement('tr');
+                    const tdLabel = document.createElement('td');
+                    tdLabel.textContent = key;
+                    const tdVal = document.createElement('td');
+                    tdVal.textContent = val;
+                    tr.appendChild(tdLabel);
+                    tr.appendChild(tdVal);
+                    specsBody.appendChild(tr);
+                });
+            } else {
+                specsBody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted);">Không có thông số cấu hình cụ thể</td></tr>';
+            }
+
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            // If event is null or clicked the background overlay directly
+            if (!event || event.target === document.getElementById('productModal')) {
+                document.getElementById('productModal').style.display = 'none';
+                
+                // Clear URL search query without reloading
+                const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                window.history.pushState({ path: cleanUrl }, '', cleanUrl);
+            }
+        }
+
+        function searchProducts() {
+            const term = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!term) {
+                renderProducts(allProducts);
+                return;
+            }
+
+            const filtered = allProducts.filter(p => 
+                p.productId.toLowerCase().includes(term) || 
+                p.name.toLowerCase().includes(term) ||
+                (p.attributes && Object.values(p.attributes).some(v => v.toLowerCase().includes(term)))
+            );
+            renderProducts(filtered);
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
 
         // Trigger on load
-        window.addEventListener('DOMContentLoaded', () => loadProduct());
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            checkUserSession(); // Kiểm tra session đăng nhập người dùng
+            
+            // Tìm kiếm trực tiếp khi gõ chữ (Live Search)
+            document.getElementById('searchInput').addEventListener('input', searchProducts);
+        });
     </script>
 </body>
 </html>

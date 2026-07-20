@@ -69,9 +69,23 @@ public class ProductRepository {
         return productTable.getItem(key);
     }
 
+    // Lấy tất cả sản phẩm bằng cách scan bảng
+    public java.util.List<ProductEntity> getAllProducts() {
+        return productTable.scan().items().stream().collect(java.util.stream.Collectors.toList());
+    }
+
     // Lưu sản phẩm lên DynamoDB
     public void saveProduct(ProductEntity product) {
         productTable.putItem(product);
+    }
+
+    // Xóa sản phẩm khỏi DynamoDB
+    public void deleteProduct(String productId, String recordType) {
+        Key key = Key.builder()
+                .partitionValue(productId)
+                .sortValue(recordType)
+                .build();
+        productTable.deleteItem(key);
     }
 
     // Debug: lấy raw attributes từ DynamoDB để kiểm tra
