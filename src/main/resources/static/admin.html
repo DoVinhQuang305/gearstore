@@ -1803,20 +1803,18 @@
         try {
             const response = await fetch(API_BASE_URL + '/auth/users');
             if (!response.ok) throw new Error('Không thể tải danh sách người dùng');
-            allUsers = await response.json();
+            const data = await response.json();
+            
+            // Chỉ lấy các tài khoản có quyền USER
+            allUsers = data.filter(u => u.role === 'USER');
             renderCustomers(allUsers);
         } catch (error) {
             console.error(error);
-            showToast('Không thể đồng bộ người dùng từ DynamoDB. Đang dùng dữ liệu offline.', 'warning');
+            showToast('Không thể đồng bộ người dùng từ DynamoDB. Vui lòng kiểm tra lại API Gateway!', 'error');
             
-            // Fallback offline dùng mock list
-            allUsers = [
-                { fullName: 'Nguyễn Văn Hùng', email: 'hung.nguyen@gmail.com', username: 'hungnguyen', role: 'USER' },
-                { fullName: 'Trần Thị Mai', email: 'mai.tran@yahoo.com', username: 'maitran', role: 'USER' },
-                { fullName: 'Lê Hoàng Nam', email: 'nam.le@hotmail.com', username: 'namle', role: 'USER' },
-                { fullName: 'Đỗ Vinh Quang', email: 'vinhquang@gmail.com', username: 'admin', role: 'ADMIN' }
-            ];
-            renderCustomers(allUsers);
+            // Xóa sạch list mock giả lập
+            allUsers = [];
+            renderCustomers([]);
         }
     }
 
