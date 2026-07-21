@@ -11,6 +11,18 @@ public class UserEntity {
 
     public UserEntity() {}
 
+    // Constructor 5 tham số nạp chồng (Overload) để giữ tính tương thích với file Test
+    public UserEntity(String username, String password, String fullName, String role, String email) {
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+        this.email = email;
+        this.phone = "";
+        this.address = "";
+    }
+
+    // Constructor đầy đủ 7 tham số
     public UserEntity(String username, String password, String fullName, String role, String email, String phone, String address) {
         this.username = username;
         this.password = password;
