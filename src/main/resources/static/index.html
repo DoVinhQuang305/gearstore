@@ -2949,13 +2949,6 @@
                 currentPrice.className = 'card-price-current';
                 currentPrice.textContent = formatVND(product.price);
                 priceRow.appendChild(currentPrice);
-
-                if (product.price) {
-                    const originalPrice = document.createElement('span');
-                    originalPrice.className = 'card-price-original';
-                    originalPrice.textContent = formatVND(Math.round((product.price * 1.05) / 50000) * 50000);
-                    priceRow.appendChild(originalPrice);
-                }
                 card.appendChild(priceRow);
 
                 // Specs list snippet
