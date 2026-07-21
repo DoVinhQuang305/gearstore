@@ -1805,17 +1805,14 @@
             if (!response.ok) throw new Error('Không thể tải danh sách người dùng');
             const data = await response.json();
             
-            // Chỉ lấy các tài khoản có quyền USER
+            // Chỉ lấy các tài khoản có quyền USER từ DynamoDB
             allUsers = data.filter(u => u.role === 'USER');
             renderCustomers(allUsers);
         } catch (error) {
-            console.warn('API error, falling back to local orders customers:', error);
-            
-            // Lấy danh sách khách hàng thật từ đơn hàng lưu tại localStorage
-            const localCustomers = loadCustomersFromOrders();
-            // Lọc chỉ lấy USER thường (hoặc khách mua hàng)
-            allUsers = localCustomers.filter(u => u.role !== 'ADMIN');
-            renderCustomers(allUsers);
+            console.error(error);
+            showToast('Không thể đồng bộ người dùng từ DynamoDB API Gateway!', 'error');
+            allUsers = [];
+            renderCustomers([]);
         }
     }
 
