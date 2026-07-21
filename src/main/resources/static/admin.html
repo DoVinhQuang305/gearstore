@@ -1611,7 +1611,10 @@
             renderDashboard(allProducts);
         } catch (error) {
             console.error(error);
-            showToast('Có lỗi khi tải sản phẩm từ AWS DynamoDB.', 'error');
+            // Chỉ cảnh báo lỗi đỏ khi danh sách allProducts thực sự trống (chưa load được gì)
+            if (!allProducts || allProducts.length === 0) {
+                showToast('Có lỗi khi tải sản phẩm từ AWS DynamoDB.', 'error');
+            }
         }
     }
 
@@ -1755,7 +1758,7 @@
             if (!response.ok) throw new Error('Không thể lưu sản phẩm');
             showToast(isEditMode ? 'Cập nhật sản phẩm thành công!' : 'Thêm sản phẩm mới thành công!', 'success');
             closeFormModal();
-            fetchProducts();
+            setTimeout(fetchProducts, 400);
         } catch (error) {
             showToast('Có lỗi xảy ra khi lưu sản phẩm.', 'error');
         }
@@ -1767,7 +1770,7 @@
             const response = await fetch(API_BASE_URL + `/products/${productId}?type=PRODUCT_INFO`, { method: 'DELETE' });
             if (!response.ok) throw new Error();
             showToast('Xóa sản phẩm thành công!', 'success');
-            fetchProducts();
+            setTimeout(fetchProducts, 400);
         } catch (error) {
             showToast('Lỗi xảy ra khi xóa sản phẩm.', 'error');
         }
