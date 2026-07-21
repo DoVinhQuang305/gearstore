@@ -37,7 +37,9 @@ public class AuthController {
             "username", user.getUsername(),
             "fullName", user.getFullName(),
             "role", user.getRole(),
-            "email", user.getEmail()
+            "email", user.getEmail(),
+            "phone", user.getPhone() != null ? user.getPhone() : "",
+            "address", user.getAddress() != null ? user.getAddress() : ""
         ));
     }
 
@@ -76,6 +78,8 @@ public class AuthController {
         existing.setFullName(updatedUser.getFullName());
         existing.setEmail(updatedUser.getEmail());
         existing.setRole(updatedUser.getRole());
+        existing.setPhone(updatedUser.getPhone());
+        existing.setAddress(updatedUser.getAddress());
         userRepository.saveUser(existing);
         return ResponseEntity.ok("Cập nhật thông tin người dùng thành công!");
     }

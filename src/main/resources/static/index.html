@@ -2614,6 +2614,8 @@
             document.getElementById('profileUsername').value = user.username || '';
             document.getElementById('profileFullName').value = user.fullName || '';
             document.getElementById('profileEmailInput').value = user.email || '';
+            document.getElementById('profilePhone').value = user.phone || '';
+            document.getElementById('profileAddress').value = user.address || '';
             document.getElementById('profileRole').value = user.role === 'ADMIN' ? 'Quản trị viên' : 'Khách hàng';
 
             document.getElementById('profileDetailModal').style.display = 'flex';
@@ -2630,7 +2632,7 @@
             }
         }
 
-        function handleProfileUpdate(e) {
+        async function handleProfileUpdate(e) {
             e.preventDefault();
             const userStr = localStorage.getItem('user');
             if (!userStr) return;
@@ -2638,9 +2640,22 @@
 
             user.fullName = document.getElementById('profileFullName').value.trim();
             user.email = document.getElementById('profileEmailInput').value.trim();
+            user.phone = document.getElementById('profilePhone').value.trim();
+            user.address = document.getElementById('profileAddress').value.trim();
 
             localStorage.setItem('user', JSON.stringify(user));
             checkUserSession(); // Cập nhật lại Avatar và Header
+
+            // Đồng bộ lên API của backend (không chặn nếu API Gateway chưa định cấu hình)
+            try {
+                await fetch(API_BASE_URL + '/auth/users/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                });
+            } catch (err) {
+                console.warn('API update offline, updated locally:', err);
+            }
 
             document.getElementById('profileDetailModal').style.display = 'none';
             showToast('Cập nhật thông tin tài khoản thành công!', 'success');
@@ -3230,14 +3245,14 @@
                 const user = JSON.parse(userStr);
                 document.getElementById('checkoutFullName').value = user.fullName || '';
                 document.getElementById('checkoutEmail').value = user.email || '';
+                document.getElementById('checkoutPhone').value = user.phone || '';
+                document.getElementById('checkoutAddress').value = user.address || '';
             } else {
                 document.getElementById('checkoutFullName').value = '';
                 document.getElementById('checkoutEmail').value = '';
+                document.getElementById('checkoutPhone').value = '';
+                document.getElementById('checkoutAddress').value = '';
             }
-
-            // Reset sdt và địa chỉ
-            document.getElementById('checkoutPhone').value = '';
-            document.getElementById('checkoutAddress').value = '';
 
             // Tính tổng tiền
             let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -3372,6 +3387,16 @@
                     <input type="email" id="profileEmailInput" required placeholder="Nhập email liên hệ" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
                 </div>
                 
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Số điện thoại</label>
+                    <input type="text" id="profilePhone" placeholder="Nhập số điện thoại" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Địa chỉ giao hàng mặc định</label>
+                    <input type="text" id="profileAddress" placeholder="Nhập địa chỉ giao hàng" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550;">
+                </div>
+
                 <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                     <label style="font-size: 0.78rem; font-weight: 700; color: #4b5563;">Quyền hạn tài khoản</label>
                     <input type="text" id="profileRole" disabled style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-weight: 550; background: #f3f4f6; color: #9ca3af;">

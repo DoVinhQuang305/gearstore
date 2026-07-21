@@ -38,6 +38,14 @@ public class UserRepository {
                         .name("Email")
                         .getter(UserEntity::getEmail)
                         .setter(UserEntity::setEmail))
+                .addAttribute(String.class, a -> a
+                        .name("Phone")
+                        .getter(UserEntity::getPhone)
+                        .setter(UserEntity::setPhone))
+                .addAttribute(String.class, a -> a
+                        .name("Address")
+                        .getter(UserEntity::getAddress)
+                        .setter(UserEntity::setAddress))
                 .build();
 
         this.userTable = enhancedClient.table("GearStore_Users", schema);
