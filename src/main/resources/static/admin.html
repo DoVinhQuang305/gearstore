@@ -1055,6 +1055,8 @@
                         <tr>
                             <th>Họ và Tên</th>
                             <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ giao hàng</th>
                             <th>Tên tài khoản</th>
                             <th>Quyền hạn</th>
                             <th>Hành động</th>
@@ -1170,6 +1172,14 @@
             <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
                 <label style="font-size:0.75rem; font-weight:700; color:#475569;">Địa chỉ Email</label>
                 <input type="email" id="custFormEmail" required class="form-input">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Số điện thoại</label>
+                <input type="text" id="custFormPhone" class="form-input">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#475569;">Địa chỉ giao hàng</label>
+                <input type="text" id="custFormAddress" class="form-input">
             </div>
             <div class="form-group" style="display:flex; flex-direction:column; gap:0.35rem;">
                 <label style="font-size:0.75rem; font-weight:700; color:#475569;">Quyền hạn (Role)</label>
@@ -1830,6 +1840,8 @@
             tr.innerHTML = `
                 <td style="font-weight:700;">${c.fullName || 'Chưa cập nhật'}</td>
                 <td>${c.email || 'Chưa cập nhật'}</td>
+                <td>${c.phone || 'Chưa cập nhật'}</td>
+                <td>${c.address || 'Chưa cập nhật'}</td>
                 <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.8rem;">${c.username}</code></td>
                 <td><span style="font-size:0.75rem; padding:4px 10px; border-radius:20px; font-weight:700; ${roleBadgeStyle}">${roleLabel}</span></td>
                 <td class="action-btns">
@@ -1855,6 +1867,8 @@
         document.getElementById('custFormUsername').value = user.username;
         document.getElementById('custFormFullName').value = user.fullName || '';
         document.getElementById('custFormEmail').value = user.email || '';
+        document.getElementById('custFormPhone').value = user.phone || '';
+        document.getElementById('custFormAddress').value = user.address || '';
         document.getElementById('custFormRole').value = user.role || 'USER';
         
         document.getElementById('customerFormModal').style.display = 'flex';
@@ -1870,13 +1884,15 @@
         const username = document.getElementById('custFormUsername').value;
         const fullName = document.getElementById('custFormFullName').value.trim();
         const email = document.getElementById('custFormEmail').value.trim();
+        const phone = document.getElementById('custFormPhone').value.trim();
+        const address = document.getElementById('custFormAddress').value.trim();
         const role = document.getElementById('custFormRole').value;
 
         try {
             const response = await fetch(API_BASE_URL + '/auth/users/update', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, fullName, email, role })
+                body: JSON.stringify({ username, fullName, email, phone, address, role })
             });
 
             if (!response.ok) throw new Error(await response.text());
