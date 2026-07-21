@@ -1809,12 +1809,13 @@
             allUsers = data.filter(u => u.role === 'USER');
             renderCustomers(allUsers);
         } catch (error) {
-            console.error(error);
-            showToast('Không thể đồng bộ người dùng từ DynamoDB. Vui lòng kiểm tra lại API Gateway!', 'error');
+            console.warn('API error, falling back to local orders customers:', error);
             
-            // Xóa sạch list mock giả lập
-            allUsers = [];
-            renderCustomers([]);
+            // Lấy danh sách khách hàng thật từ đơn hàng lưu tại localStorage
+            const localCustomers = loadCustomersFromOrders();
+            // Lọc chỉ lấy USER thường (hoặc khách mua hàng)
+            allUsers = localCustomers.filter(u => u.role !== 'ADMIN');
+            renderCustomers(allUsers);
         }
     }
 
