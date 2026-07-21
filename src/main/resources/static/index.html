@@ -3001,11 +3001,7 @@
             document.getElementById('modalProductName').textContent = product.name;
             document.getElementById('modalProductPrice').textContent = formatVND(product.price);
             
-            if (product.price) {
-                document.getElementById('modalProductPriceOriginal').textContent = formatVND(Math.round((product.price * 1.05) / 50000) * 50000);
-            } else {
-                document.getElementById('modalProductPriceOriginal').textContent = '';
-            }
+            document.getElementById('modalProductPriceOriginal').textContent = '';
 
             const img = document.getElementById('modalProductImage');
             img.src = product.imageUrl || 'https://placehold.co/400x400/f3f4f6/333333?text=No+Image';
