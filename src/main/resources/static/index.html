@@ -2289,9 +2289,54 @@
                     
                     const filterText = this.textContent.trim();
                     applyFilter(mainCategoryName, filterText);
-
                 });
             });
+
+            // Cấu hình sự kiện click cho slider tabs trung tâm
+            const tabItems = document.querySelectorAll('.slider-tabs .slider-tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabText = this.textContent.trim().toLowerCase();
+                    
+                    let filtered = [];
+                    if (tabText.includes('laptop')) {
+                        filtered = allProducts.filter(p => {
+                            const name = p.name.toLowerCase();
+                            const category = (p.attributes && p.attributes['Loại'] || '').toLowerCase();
+                            return name.includes('laptop') || name.includes('gaming') || name.includes('gigabyte') || name.includes('asus') || name.includes('acer') || name.includes('lenovo');
+                        });
+                    } else if (tabText.includes('pc')) {
+                        filtered = allProducts.filter(p => {
+                            const name = p.name.toLowerCase();
+                            return name.includes('pc') || name.includes('gvn') || name.includes('intel') || name.includes('ryzen');
+                        });
+                    } else if (tabText.includes('màn hình')) {
+                        filtered = allProducts.filter(p => {
+                            const name = p.name.toLowerCase();
+                            return name.includes('màn hình') || name.includes('odyssey') || name.includes('monitor') || name.includes('samsung');
+                        });
+                    } else if (tabText.includes('linh kiện')) {
+                        filtered = allProducts.filter(p => {
+                            const name = p.name.toLowerCase();
+                            return name.includes('chuột') || name.includes('bàn phím') || name.includes('tai nghe') || name.includes('lót chuột') || name.includes('razer') || name.includes('hyperx') || name.includes('logitech') || name.includes('mainboard') || name.includes('ram');
+                        });
+                    } else {
+                        filtered = allProducts;
+                    }
+                    renderProducts(filtered);
+                });
+            });
+
+            // Kích hoạt click tab đầu tiên để tự động hiển thị sản phẩm khi mới tải trang
+            const activeTab = document.querySelector('.slider-tabs .slider-tab-item.active');
+            if (activeTab) {
+                // Sử dụng setTimeout ngắn để đảm bảo dữ liệu allProducts đã được load hoàn chỉnh
+                setTimeout(() => {
+                    activeTab.click();
+                }, 100);
+            }
         }
 
         // Tạo điểm nhấn nhấp nháy phát sáng cho cột danh mục ở body
