@@ -3270,23 +3270,31 @@
         function checkoutCart() {
             if (cart.length === 0) return;
             
+            // Kiểm tra trạng thái đăng nhập
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                // Ẩn modal giỏ hàng
+                document.getElementById('cartModal').style.display = 'none';
+                showToast('Vui lòng đăng nhập trước khi tiến hành thanh toán!', 'warning');
+                
+                // Mở modal đăng nhập
+                if (typeof openLoginModal === 'function') {
+                    openLoginModal();
+                } else {
+                    document.getElementById('loginModal').style.display = 'flex';
+                }
+                return;
+            }
+
             // Ẩn modal giỏ hàng
             document.getElementById('cartModal').style.display = 'none';
 
             // Auto-fill thông tin khách hàng nếu đã đăng nhập
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-                const user = JSON.parse(userStr);
-                document.getElementById('checkoutFullName').value = user.fullName || '';
-                document.getElementById('checkoutEmail').value = user.email || '';
-                document.getElementById('checkoutPhone').value = user.phone || '';
-                document.getElementById('checkoutAddress').value = user.address || '';
-            } else {
-                document.getElementById('checkoutFullName').value = '';
-                document.getElementById('checkoutEmail').value = '';
-                document.getElementById('checkoutPhone').value = '';
-                document.getElementById('checkoutAddress').value = '';
-            }
+            const user = JSON.parse(userStr);
+            document.getElementById('checkoutFullName').value = user.fullName || '';
+            document.getElementById('checkoutEmail').value = user.email || '';
+            document.getElementById('checkoutPhone').value = user.phone || '';
+            document.getElementById('checkoutAddress').value = user.address || '';
 
             // Tính tổng tiền
             let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
