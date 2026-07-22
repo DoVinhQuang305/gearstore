@@ -3268,7 +3268,10 @@
 
         // Mở Form thanh toán mới
         function checkoutCart() {
-            if (cart.length === 0) return;
+            if (cart.length === 0) {
+                showToast('Giỏ hàng của bạn đang trống. Vui lòng chọn sản phẩm trước khi thanh toán!', 'warning');
+                return;
+            }
             
             // Kiểm tra trạng thái đăng nhập
             const userStr = localStorage.getItem('user');
